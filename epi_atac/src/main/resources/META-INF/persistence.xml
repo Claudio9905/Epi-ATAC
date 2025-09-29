@@ -4,6 +4,14 @@
              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
     <persistence-unit name="epi_atac">
         <!-- Nella persistence unit andremo ad inserire l'entities che andremo a creare -->
+        <class>claudiopostiglione.entities.Mezzo</class>
+        <class>claudiopostiglione.entities.Tratta</class>
+        <class>claudiopostiglione.entities.TesseraUtente</class>
+        <class>claudiopostiglione.entities.PuntoEmissione</class>
+        <class>claudiopostiglione.entities.Biglietto</class>
+        <class>claudiopostiglione.entities.MezzoTratta</class>
+        <class>claudiopostiglione.entities.StatoMezzo</class>
+        <class>claudiopostiglione.entities.Abbonamento</class>
         <properties>
 
             <property name="jakarta.persistence.jdbc.url"
