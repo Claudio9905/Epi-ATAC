@@ -20,15 +20,17 @@ public class Abbonamento extends Biglietto {
     public Abbonamento() {
     }
 
-    public Abbonamento(TipoAbbonamento tipo, LocalDate dataAcquisto) {
-        super(dataAcquisto, true);
+    public Abbonamento(TipoAbbonamento tipo, LocalDate dataAcquisto, PuntoEmissione punto_emissione, TesseraUtente tessera) {
+        super(dataAcquisto, punto_emissione, tessera);
         this.tipo = tipo;
+        this.obliterato = true;
+        this.dataObliterazione = this.dataAcquisto;
         if (tipo.equals(TipoAbbonamento.MENSILE)) {
-
             this.dataScadenza = dataAcquisto.plusDays(30);
         } else {
             this.dataScadenza = dataAcquisto.plusDays(7);
         }
+        this.annullato = LocalDate.now().isAfter(this.dataScadenza);
     }
 
     //Metodi
@@ -50,10 +52,16 @@ public class Abbonamento extends Biglietto {
 
     @Override
     public String toString() {
-        return "|-- Abbonamento: " +
-                "ID_abbonamento= " +
-                ", Tipo= " + tipo +
-                ", Data Scadenza= " + dataScadenza +
-                " --|";
+        return "Abbonamento{" +
+                "Id=" + Id +
+                ", tipo=" + tipo +
+                ", tessera=" + tessera +
+                ", dataAcquisto=" + dataAcquisto +
+                ", punto_emissione=" + punto_emissione +
+                ", dataObliterazione=" + dataObliterazione +
+                ", obliterato=" + obliterato +
+                ", dataScadenza=" + dataScadenza +
+                ", annullato=" + annullato +
+                '}';
     }
 }

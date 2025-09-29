@@ -19,6 +19,7 @@ public class TesseraUtente {
     private LocalDate dataInizio;
     @Column(name = "Data_Scadenza", nullable = false)
     private LocalDate dataScadenza;
+    private boolean valido;
 
     @OneToMany(mappedBy = "tessera")
     private List<Biglietto> listaBiglietti;
@@ -28,9 +29,10 @@ public class TesseraUtente {
     public TesseraUtente() {
     }
 
-    public TesseraUtente(LocalDate dataInizio, LocalDate dataScadenza) {
+    public TesseraUtente(LocalDate dataInizio) {
         this.dataInizio = dataInizio;
-        this.dataScadenza = dataScadenza;
+        this.dataScadenza = dataInizio.plusYears(1);
+        this.valido = LocalDate.now().isAfter(dataScadenza);
     }
 
     //Metodi
@@ -52,6 +54,22 @@ public class TesseraUtente {
 
     public void setDataScadenza(LocalDate dataScadenza) {
         this.dataScadenza = dataScadenza;
+    }
+
+    public boolean isValido() {
+        return valido;
+    }
+
+    public void setValido(boolean valido) {
+        this.valido = valido;
+    }
+
+    public List<Biglietto> getListaBiglietti() {
+        return listaBiglietti;
+    }
+
+    public void setListaBiglietti(List<Biglietto> listaBiglietti) {
+        this.listaBiglietti = listaBiglietti;
     }
 
     @Override
