@@ -1,8 +1,12 @@
 package claudiopostiglione.dao;
 
+import claudiopostiglione.entities.GestioneVendita;
 import claudiopostiglione.entities.MezzoTratta;
+import claudiopostiglione.exceptions.IdNotFoundException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+
+import java.util.UUID;
 
 public class MezzoTrattaDAO {
     private final EntityManager em;
@@ -18,5 +22,11 @@ public class MezzoTrattaDAO {
         em.persist(mezzoTratta);
         transaction.commit();
         System.out.println(" Percorrenza del mezzo registrata!");
+    }
+
+    public MezzoTratta findMezzoTrattaById(UUID id){
+        MezzoTratta found = em.find(MezzoTratta.class, id);
+        if(found == null) throw new IdNotFoundException(id);
+        return found;
     }
 }

@@ -1,31 +1,30 @@
 package claudiopostiglione.dao;
 
+import claudiopostiglione.entities.Biglietto;
 import claudiopostiglione.entities.GestioneVendita;
-import claudiopostiglione.entities.Mezzo;
 import claudiopostiglione.exceptions.IdNotFoundException;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.*;
 
 import java.util.UUID;
 
-public class MezzoDAO {
+public class GestioneVenditaDAO {
+
     private final EntityManager em;
 
-    public MezzoDAO(EntityManager em){
+    public GestioneVenditaDAO(EntityManager em){
         this.em = em;
     }
 
-    public void save (Mezzo mezzo){
-
+    public void save (GestioneVendita biglietto){
         EntityTransaction transaction = em.getTransaction();
         transaction.begin();
-        em.persist(mezzo);
+        em.persist(biglietto);
         transaction.commit();
-    System.out.println("Mezzo funzionante... Per ora");
+        System.out.println("Acquisto completato!");
     }
 
-    public Mezzo findMezzoById(UUID id){
-        Mezzo found = em.find(Mezzo.class, id);
+    public GestioneVendita findGestioneVenditaById(UUID id){
+        GestioneVendita found = em.find(GestioneVendita.class, id);
         if(found == null) throw new IdNotFoundException(id);
         return found;
     }
