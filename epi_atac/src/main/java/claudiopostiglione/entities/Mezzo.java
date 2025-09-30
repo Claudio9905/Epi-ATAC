@@ -20,7 +20,7 @@ public class Mezzo {
     @Column(name = "Capienza", nullable = false)
     private int capienza;
 
-    @OneToMany(mappedBy = "mezzo_di_obliterazione")
+    @OneToMany(mappedBy = "mezzoObliterazione")
     private List<Biglietto> listaBiglietti;
 
     @OneToMany(mappedBy = "storico")
@@ -57,6 +57,30 @@ public class Mezzo {
 
     public void setCapienza(int capienza) {
         this.capienza = capienza;
+    }
+
+    public List<Biglietto> getListaBiglietti() {
+        return listaBiglietti;
+    }
+
+    public void setListaBiglietti(List<Biglietto> listaBiglietti) {
+        this.listaBiglietti = listaBiglietti;
+    }
+
+    public List<StatoMezzo> getListaStorico() {
+        return listaStorico;
+    }
+
+    public void setListaStorico(List<StatoMezzo> listaStorico) {
+        this.listaStorico = listaStorico;
+    }
+
+    public List<MezzoTratta> getListaMezzoTratta() {
+        return listaMezzoTratta;
+    }
+
+    public void setListaMezzoTratta(List<MezzoTratta> listaMezzoTratta) {
+        this.listaMezzoTratta = listaMezzoTratta;
     }
 
     @Override
