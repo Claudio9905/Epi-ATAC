@@ -21,9 +21,12 @@ public class TesseraUtente {
     private LocalDate dataScadenza;
     private boolean valido;
 
-    @OneToMany(mappedBy = "tessera")
-    private List<Biglietto> listaBiglietti;
+    @OneToOne(mappedBy = "tessera")
+    private Abbonamento abbonamento;
 
+    @OneToOne
+    @JoinColumn(name = "utente_id", unique = true)
+    private Utente utente;
 
     //Costruttori
     public TesseraUtente() {
@@ -64,12 +67,20 @@ public class TesseraUtente {
         this.valido = valido;
     }
 
-    public List<Biglietto> getListaBiglietti() {
-        return listaBiglietti;
+    public Abbonamento getAbbonamento() {
+        return abbonamento;
     }
 
-    public void setListaBiglietti(List<Biglietto> listaBiglietti) {
-        this.listaBiglietti = listaBiglietti;
+    public void setAbbonamento(Abbonamento abbonamento) {
+        this.abbonamento = abbonamento;
+    }
+
+    public Utente getUtente() {
+        return utente;
+    }
+
+    public void setUtente(Utente utente) {
+        this.utente = utente;
     }
 
     @Override

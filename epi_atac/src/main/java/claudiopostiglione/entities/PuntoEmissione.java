@@ -19,8 +19,8 @@ public class PuntoEmissione {
     @Column(name = "In_Servizio")
     private boolean inServizio;
 
-    @OneToMany(mappedBy = "punto_emissione")
-    private List<Biglietto> listaBiglietti;
+    @OneToMany(mappedBy = "puntoEmissione")
+    private List<GestioneVendita> listaVendite;
 
     //Costruttori
     public PuntoEmissione() {
@@ -50,6 +50,14 @@ public class PuntoEmissione {
 
     public void setInServizio(boolean inServizio) {
         this.inServizio = inServizio;
+    }
+
+    public List<GestioneVendita> getListaVendite() {
+        return listaVendite;
+    }
+
+    public void setListaVendite(List<GestioneVendita> listaVendite) {
+        this.listaVendite = listaVendite;
     }
 
     @Override
