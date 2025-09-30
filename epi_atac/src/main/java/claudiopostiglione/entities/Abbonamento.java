@@ -16,8 +16,8 @@ public class Abbonamento extends GestioneVendita {
     @Column(name = "Data_Scadenza", nullable = false)
     private LocalDate dataScadenza;
 
-    @OneToOne
-    @JoinColumn(name = "tessera", nullable = false, unique = true)
+    @ManyToOne
+    @JoinColumn(name = "tessera", nullable = false)
     private TesseraUtente tessera;
 
     //Costruttori
@@ -32,7 +32,7 @@ public class Abbonamento extends GestioneVendita {
         } else {
             this.dataScadenza = dataAcquisto.plusDays(7);
         }
-
+        this.tessera = tessera;
     }
 
     //Metodi

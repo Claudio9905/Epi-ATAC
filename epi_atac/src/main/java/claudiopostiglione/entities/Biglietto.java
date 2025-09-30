@@ -13,16 +13,21 @@ public class Biglietto extends GestioneVendita{
     private boolean obliterato;
 
     @ManyToOne
-    @JoinColumn(name = "Mezzo_di_Obliterazione", nullable = false)
+    @JoinColumn(name = "Mezzo_di_Obliterazione")
     private Mezzo mezzoObliterazione;
 
     //Costruttori
     public Biglietto(){}
 
+    public Biglietto(LocalDate dataAcquisto, PuntoEmissione puntoEmissione){
+        super(dataAcquisto, puntoEmissione);
+        this.obliterato = false;
+    }
+
     public Biglietto(Mezzo mezzoObliterazione, LocalDate dataAcquisto, PuntoEmissione puntoEmissione){
         super(dataAcquisto, puntoEmissione);
         this.mezzoObliterazione = mezzoObliterazione;
-        this.obliterato = false;
+        this.obliterato = true;
     }
 
     //Metodi

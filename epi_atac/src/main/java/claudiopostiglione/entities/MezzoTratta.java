@@ -3,6 +3,8 @@ package claudiopostiglione.entities;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 @Entity
@@ -14,11 +16,11 @@ public class MezzoTratta {
     @GeneratedValue
     private UUID Id;
     @Column(name = "Percorrenza_Effettiva", nullable = false)
-    private int percorrenzaEffettiva;
+    private long percorrenzaEffettiva;
     @Column(name = "Orario_Partenza", nullable = false)
-    private LocalDateTime orarioPartenza;
+    private LocalTime orarioPartenza;
     @Column(name = "Orario_Arrivo", nullable = false)
-    private LocalDateTime orarioArrivo;
+    private LocalTime orarioArrivo;
 
 
     @ManyToOne
@@ -32,10 +34,12 @@ public class MezzoTratta {
     public MezzoTratta() {
     }
 
-    public MezzoTratta(int percorrenzaEffettiva, LocalDateTime orarioPartenza, LocalDateTime orarioArrivo) {
-        this.percorrenzaEffettiva = percorrenzaEffettiva;
+    public MezzoTratta(LocalTime orarioPartenza, LocalTime orarioArrivo, Tratta tratta, Mezzo mezzo) {
         this.orarioPartenza = orarioPartenza;
+        this.tratta = tratta;
+        this.mezzo = mezzo;
         this.orarioArrivo = orarioArrivo;
+        this.percorrenzaEffettiva = ChronoUnit.MINUTES.between(orarioPartenza, orarioArrivo);
     }
 
     //Metodi
@@ -47,7 +51,7 @@ public class MezzoTratta {
         this.Id = mezzoTrattaId;
     }
 
-    public int getPercorrenzaEffettiva() {
+    public long getPercorrenzaEffettiva() {
         return percorrenzaEffettiva;
     }
 
@@ -55,19 +59,19 @@ public class MezzoTratta {
         this.percorrenzaEffettiva = percorrenzzaEffettiva;
     }
 
-    public LocalDateTime getOrarioPartenza() {
+    public LocalTime getOrarioPartenza() {
         return orarioPartenza;
     }
 
-    public void setOrarioPartenza(LocalDateTime orarioPartenza) {
+    public void setOrarioPartenza(LocalTime orarioPartenza) {
         this.orarioPartenza = orarioPartenza;
     }
 
-    public LocalDateTime getOrarioArrivo() {
+    public LocalTime getOrarioArrivo() {
         return orarioArrivo;
     }
 
-    public void setOrarioArrivo(LocalDateTime orarioArrivo) {
+    public void setOrarioArrivo(LocalTime orarioArrivo) {
         this.orarioArrivo = orarioArrivo;
     }
 

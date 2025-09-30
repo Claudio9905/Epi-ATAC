@@ -21,8 +21,8 @@ public class TesseraUtente {
     private LocalDate dataScadenza;
     private boolean valido;
 
-    @OneToOne(mappedBy = "tessera")
-    private Abbonamento abbonamento;
+    @OneToMany(mappedBy = "tessera")
+    private List<Abbonamento> abbonamento;
 
     @OneToOne
     @JoinColumn(name = "utente_id", unique = true)
@@ -32,10 +32,11 @@ public class TesseraUtente {
     public TesseraUtente() {
     }
 
-    public TesseraUtente(LocalDate dataInizio) {
+    public TesseraUtente(LocalDate dataInizio, Utente utente) {
         this.dataInizio = dataInizio;
         this.dataScadenza = dataInizio.plusYears(1);
         this.valido = LocalDate.now().isAfter(dataScadenza);
+        this.utente = utente;
     }
 
     //Metodi
@@ -67,11 +68,11 @@ public class TesseraUtente {
         this.valido = valido;
     }
 
-    public Abbonamento getAbbonamento() {
+    public List<Abbonamento> getAbbonamento() {
         return abbonamento;
     }
 
-    public void setAbbonamento(Abbonamento abbonamento) {
+    public void setAbbonamento(List<Abbonamento> abbonamento) {
         this.abbonamento = abbonamento;
     }
 

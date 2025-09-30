@@ -23,7 +23,7 @@ public class Mezzo {
     @OneToMany(mappedBy = "mezzoObliterazione")
     private List<Biglietto> listaBiglietti;
 
-    @OneToMany(mappedBy = "storico")
+    @OneToMany(mappedBy = "mezzo")
     private List<StatoMezzo> listaStorico;
 
     @OneToMany(mappedBy = "mezzo")

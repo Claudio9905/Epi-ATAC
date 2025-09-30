@@ -19,22 +19,29 @@ public class StatoMezzo {
     private TipoStatoMezzo stato;
     @Column(name = "Data_Inizio", nullable = false)
     private LocalDate dataInizio;
-    @Column(name = "Data_Fine", nullable = false)
+    @Column(name = "Data_Fine")
     private LocalDate dataFine;
-    @Column(name = "Motivo_Manutenzione", nullable = false)
+    @Column(name = "Motivo_Manutenzione")
     private String motivoManutenzione;
 
     @ManyToOne
-    private Mezzo storico;
+    @JoinColumn(nullable = false)
+    private Mezzo mezzo;
 
     //Costruttori
     public StatoMezzo() {
     }
 
-    public StatoMezzo(TipoStatoMezzo stato, LocalDate dataInizio, LocalDate dataFine, String motivoManutenzione) {
+    public StatoMezzo(Mezzo mezzo, TipoStatoMezzo stato, LocalDate dataInizio, LocalDate dataFine) {
+        this.mezzo = mezzo;
         this.stato = stato;
         this.dataInizio = dataInizio;
         this.dataFine = dataFine;
+
+    }
+
+    public StatoMezzo(Mezzo mezzo, TipoStatoMezzo stato, LocalDate dataInizio, LocalDate dataFine, String motivoManutenzione) {
+        this(mezzo, stato, dataInizio, dataFine);
         this.motivoManutenzione = motivoManutenzione;
 
     }
