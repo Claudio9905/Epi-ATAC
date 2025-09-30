@@ -16,6 +16,6 @@ public class BigliettoDAO {
         transaction.begin();
         em.persist(biglietto);
         transaction.commit();
-        System.out.println("Biglietto comprato!");
+        System.out.println("Biglietto comprato! :)");
     }
 }

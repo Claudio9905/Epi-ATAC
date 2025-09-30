@@ -1,21 +1,22 @@
 package claudiopostiglione.dao;
 
-import claudiopostiglione.entities.TesseraUtente;
+import claudiopostiglione.entities.PuntoEmissione;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 
-public class TesseraUtenteDAO {
+public class PuntoEmissioneDAO {
     private final EntityManager em;
 
-    public TesseraUtenteDAO(EntityManager em){
+    public PuntoEmissioneDAO(EntityManager em) {
         this.em = em;
     }
 
-    public void save (TesseraUtente tessera){
+    public void save(PuntoEmissione puntoEmissione) {
+
         EntityTransaction transaction = em.getTransaction();
         transaction.begin();
-        em.persist(tessera);
+        em.persist(puntoEmissione);
         transaction.commit();
-        System.out.println("Tessera salvata! :)");
+        System.out.println("Punto di emissione convenzionato! :) ");
     }
 }

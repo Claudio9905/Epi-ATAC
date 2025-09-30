@@ -1,21 +1,22 @@
 package claudiopostiglione.dao;
 
-import claudiopostiglione.entities.TesseraUtente;
+import claudiopostiglione.entities.Tratta;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 
-public class TesseraUtenteDAO {
+public class TrattaDAO {
     private final EntityManager em;
 
-    public TesseraUtenteDAO(EntityManager em){
+    public TrattaDAO(EntityManager em){
         this.em = em;
     }
 
-    public void save (TesseraUtente tessera){
+    public void save (Tratta tratta){
+
         EntityTransaction transaction = em.getTransaction();
         transaction.begin();
-        em.persist(tessera);
+        em.persist(tratta);
         transaction.commit();
-        System.out.println("Tessera salvata! :)");
+        System.out.println("Tratta salvata! :)");
     }
 }

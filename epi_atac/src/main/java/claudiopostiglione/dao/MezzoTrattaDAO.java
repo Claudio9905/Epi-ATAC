@@ -17,6 +17,6 @@ public class MezzoTrattaDAO {
         transaction.begin();
         em.persist(mezzoTratta);
         transaction.commit();
-        System.out.println(" Percorrenza del mezzo registrata!");
+        System.out.println(" Percorrenza del mezzo registrata! :)");
     }
 }
