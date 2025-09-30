@@ -12,13 +12,10 @@ public class BigliettoDAO {
     }
 
     public void save (Biglietto biglietto){
-
         EntityTransaction transaction = em.getTransaction();
         transaction.begin();
         em.persist(biglietto);
         transaction.commit();
         System.out.println("Biglietto comprato!");
     }
-
-
 }
