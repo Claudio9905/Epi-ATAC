@@ -20,7 +20,7 @@ public class TesseraUtenteDAO {
         transaction.begin();
         em.persist(tessera);
         transaction.commit();
-        System.out.println("Tessera salvata!");
+        System.out.println("Tessera salvata! :)");
     }
 
     public TesseraUtente findTesseraUtenteById(UUID id){

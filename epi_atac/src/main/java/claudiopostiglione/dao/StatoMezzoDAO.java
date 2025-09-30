@@ -20,7 +20,7 @@ public class StatoMezzoDAO {
         transaction.begin();
         em.persist(statoMezzo);
         transaction.commit();
-        System.out.println("Aggiunta allo storico del mezzo!");
+        System.out.println("Aggiunta allo storico del mezzo! :)");
     }
 
     public StatoMezzo findStatoMezzoById(UUID id){

@@ -21,7 +21,7 @@ public class MezzoDAO {
         transaction.begin();
         em.persist(mezzo);
         transaction.commit();
-    System.out.println("Mezzo funzionante... Per ora");
+    System.out.println("Mezzo funzionante... Per ora :)");
     }
 
     public Mezzo findMezzoById(UUID id){
