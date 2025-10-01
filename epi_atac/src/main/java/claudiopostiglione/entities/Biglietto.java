@@ -3,14 +3,15 @@ package claudiopostiglione.entities;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "Biglietto")
 public class Biglietto extends GestioneVendita{
 
     //Attributi
-    @Column(name = "Obliterato", nullable = false)
-    private boolean obliterato;
+    @Column(name = "Data_Obliterazione")
+    private LocalDate DataObliterazione;
 
     @ManyToOne
     @JoinColumn(name = "Mezzo_di_Obliterazione")
@@ -19,15 +20,14 @@ public class Biglietto extends GestioneVendita{
     //Costruttori
     public Biglietto(){}
 
-    public Biglietto(LocalDate dataAcquisto, PuntoEmissione puntoEmissione){
+    public Biglietto(LocalDate dataAcquisto, PuntoEmissione puntoEmissione) {
         super(dataAcquisto, puntoEmissione);
-        this.obliterato = false;
     }
 
-    public Biglietto(Mezzo mezzoObliterazione, LocalDate dataAcquisto, PuntoEmissione puntoEmissione){
+    public Biglietto(LocalDate dataAcquisto, PuntoEmissione puntoEmissione, LocalDate dataObliterazione, Mezzo mezzoObliterazione) {
         super(dataAcquisto, puntoEmissione);
+        DataObliterazione = dataObliterazione;
         this.mezzoObliterazione = mezzoObliterazione;
-        this.obliterato = true;
     }
 
     //Metodi
@@ -39,23 +39,22 @@ public class Biglietto extends GestioneVendita{
         this.mezzoObliterazione = mezzoObliterazione;
     }
 
-    public boolean isObliterato() {
-        return obliterato;
+    public LocalDate getDataObliterazione() {
+        return DataObliterazione;
     }
 
-    public void setObliterato(boolean obliterato) {
-        this.obliterato = obliterato;
+    public void setDataObliterazione(LocalDate dataObliterazione) {
+        DataObliterazione = dataObliterazione;
     }
 
     @Override
     public String toString() {
         return "|-- Biglietto: " +
-                ", ID= " + id +
+                "ID= " + id +
                 ", Punto emissione=" + puntoEmissione +
                 ", Data acquisto= " + dataAcquisto +
                 ", Mezzo di obliterazione= " + mezzoObliterazione +
-                ", Obliterato= " + obliterato +
-                ", Valido= " + valido +
+                ", Obliterato= " + DataObliterazione +
                 " --|";
     }
 }

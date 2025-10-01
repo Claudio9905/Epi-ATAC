@@ -78,7 +78,7 @@ public class MezzoTratta {
     @Override
     public String toString() {
         return "|-- Mezzo-Tratta: " +
-                " ID del mezzo= " + mezzo +
+                "ID del mezzo= " + mezzo +
                 ", ID della tratta= " + tratta +
                 ", Percorrenza Effettiva= " + percorrenzaEffettiva +
                 ", Orario partenza= " + orarioPartenza +

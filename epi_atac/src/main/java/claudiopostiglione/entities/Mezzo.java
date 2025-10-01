@@ -86,7 +86,7 @@ public class Mezzo {
     @Override
     public String toString() {
         return "|-- Mezzo: " +
-                " Id mezzo= " + Id +
+                "Id mezzo= " + Id +
                 ", Tipo= " + tipo +
                 ", Capienza= " + capienza +
                 " --|";
