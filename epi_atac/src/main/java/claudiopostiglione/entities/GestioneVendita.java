@@ -23,18 +23,16 @@ public abstract class GestioneVendita {
     @JoinColumn(name = "punto_emissione", nullable = false)
     protected PuntoEmissione puntoEmissione;
 
-    @ManyToOne
-    @JoinColumn(nullable = false)
-    protected Mezzo mezzo;
+    protected TipoMezzo tipoMezzo;
 
     //Costruttori
     public GestioneVendita() {
     }
 
-    public GestioneVendita(LocalDate dataAcquisto, PuntoEmissione puntoEmissione, Mezzo mezzo) {
+    public GestioneVendita(LocalDate dataAcquisto, PuntoEmissione puntoEmissione, TipoMezzo tipoMezzo) {
         this.dataAcquisto = dataAcquisto;
         this.puntoEmissione = puntoEmissione;
-        this.mezzo = mezzo;
+        this.tipoMezzo = tipoMezzo;
     }
 
 

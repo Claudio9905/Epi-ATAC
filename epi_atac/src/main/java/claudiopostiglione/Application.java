@@ -1,14 +1,15 @@
 package claudiopostiglione;
 
-import claudiopostiglione.dao.TesseraUtenteDAO;
-import claudiopostiglione.entities.Abbonamento;
-import claudiopostiglione.entities.TesseraUtente;
+import claudiopostiglione.dao.*;
+import claudiopostiglione.entities.*;
 import com.github.javafaker.Faker;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -90,15 +91,15 @@ public class Application {
 //        peDao.save(Distributore3);
 //        peDao.save(Distributore4);
 //        peDao.save(Distributore5);
-
-        //        LocalDate ld = LocalDate.of(r.nextInt(2023, 2026), r.nextInt(1, 13), r.nextInt(1, 32));
+//
+//                LocalDate ld = LocalDate.of(r.nextInt(2023, 2026), r.nextInt(1, 13), r.nextInt(1, 32));
 //        GestioneVenditaDAO gvDao = new GestioneVenditaDAO(em);
-//        Biglietto b1 = new Biglietto(getRandomDate(LocalDate.now().minusYears(2), LocalDate.now()), Distributore4, m2);
-//        Biglietto b2 = new Biglietto(getRandomDate(LocalDate.now().minusYears(2), LocalDate.now()), Distributore4, m3);
-//        Biglietto b3 = new Biglietto(getRandomDate(LocalDate.now().minusYears(2), LocalDate.now()), Negozio1, m1);
-//        Biglietto b4 = new Biglietto(getRandomDate(LocalDate.now().minusYears(2), LocalDate.now()), Negozio3, m2);
-//        Biglietto b5 = new Biglietto(LocalDate.of(2024, 11, 23), Negozio2, getRandomDate(LocalDate.of(2024, 11, 23), LocalDate.now()), m2);
-//        Biglietto b6 = new Biglietto(LocalDate.of(2023, 11, 23), Negozio4, getRandomDate(LocalDate.of(2023, 11, 23), LocalDate.now()), m1);
+//        Biglietto b1 = new Biglietto(getRandomDate(LocalDate.now().minusYears(2), LocalDate.now()), Distributore4,TipoMezzo.AUTOBUS);
+//        Biglietto b2 = new Biglietto(getRandomDate(LocalDate.now().minusYears(2), LocalDate.now()), Distributore4,TipoMezzo.AUTOBUS);
+//        Biglietto b3 = new Biglietto(getRandomDate(LocalDate.now().minusYears(2), LocalDate.now()), Negozio1,TipoMezzo.AUTOBUS);
+//        Biglietto b4 = new Biglietto(getRandomDate(LocalDate.now().minusYears(2), LocalDate.now()), Negozio3, TipoMezzo.AUTOBUS);
+//        Biglietto b5 = new Biglietto(LocalDate.of(2024, 11, 23), Negozio2, getRandomDate(LocalDate.of(2024, 11, 23), LocalDate.now()),TipoMezzo.AUTOBUS, m2);
+//        Biglietto b6 = new Biglietto(LocalDate.of(2023, 11, 23), Negozio4, getRandomDate(LocalDate.of(2023, 11, 23), LocalDate.now()),TipoMezzo.TRAM, m1);
 //
 //        gvDao.save(b1);
 //        gvDao.save(b2);
@@ -107,12 +108,12 @@ public class Application {
 //        gvDao.save(b5);
 //        gvDao.save(b6);
 //
-//        Abbonamento a1 = new Abbonamento(TipoAbbonamento.MENSILE, LocalDate.of(2024, 6, 19), Distributore1, tu1, m1);
-//        Abbonamento a2 = new Abbonamento(TipoAbbonamento.SETTIMANALE, LocalDate.of(2025, 10, 19), Distributore4, tu1, m5);
-//        Abbonamento a3 = new Abbonamento(TipoAbbonamento.MENSILE, LocalDate.of(2024, 9, 19), Negozio1, tu2, m3);
-//        Abbonamento a4 = new Abbonamento(TipoAbbonamento.MENSILE, LocalDate.of(2025, 9, 19), Negozio2, tu3, m4);
-//        Abbonamento a5 = new Abbonamento(TipoAbbonamento.SETTIMANALE, LocalDate.of(2025, 5, 19), Distributore4, tu4, m3);
-//        Abbonamento a6 = new Abbonamento(TipoAbbonamento.MENSILE, LocalDate.of(2025, 9, 29), Negozio2, tu5, m2);
+//        Abbonamento a1 = new Abbonamento(TipoAbbonamento.MENSILE, LocalDate.of(2024, 6, 19), Distributore1, tu1, TipoMezzo.AUTOBUS);
+//        Abbonamento a2 = new Abbonamento(TipoAbbonamento.SETTIMANALE, LocalDate.of(2025, 10, 19), Distributore4, tu1, TipoMezzo.AUTOBUS);
+//        Abbonamento a3 = new Abbonamento(TipoAbbonamento.MENSILE, LocalDate.of(2024, 9, 19), Negozio1, tu2, TipoMezzo.TRAM);
+//        Abbonamento a4 = new Abbonamento(TipoAbbonamento.MENSILE, LocalDate.of(2025, 9, 19), Negozio2, tu3, TipoMezzo.TRAM);
+//        Abbonamento a5 = new Abbonamento(TipoAbbonamento.SETTIMANALE, LocalDate.of(2025, 5, 19), Distributore4, tu4, TipoMezzo.TRAM);
+//        Abbonamento a6 = new Abbonamento(TipoAbbonamento.MENSILE, LocalDate.of(2025, 9, 29), Negozio2, tu5, TipoMezzo.AUTOBUS);
 //        gvDao.save(a1);
 //        gvDao.save(a2);
 //        gvDao.save(a3);
@@ -166,6 +167,9 @@ public class Application {
 //        System.out.println(gvDao.totalSoldTicketsInSalePlace("25d38f55-1c5c-453c-9da6-a0ea24df1089"));
 
         //System.out.println(isTheSubValid("b9b39507-1522-4da7-87ff-13ed178ceb3a", "10b72c5d-3767-4210-8cde-913ed88f4012", em));
+
+        obliteratiPerMezzo("33ace2d7-6ed5-4dba-94d8-5b5e7f77d130", em);
+
     }
 
     public static LocalDate getRandomDate(LocalDate start, LocalDate end) {
@@ -198,4 +202,26 @@ public class Application {
             return false;
         }
     }
+
+
+    public static int  obliteratiPerMezzo(String id, EntityManager em){
+        UUID mezzoid = UUID.fromString(id);
+
+        MezzoDAO mezzoOB =  new MezzoDAO(em);
+        Mezzo mezzo= mezzoOB.findMezzoById(mezzoid);
+        int numeroBigliettiTrovati = mezzo.getListaBiglietti().size();
+        if (mezzo.getListaBiglietti().size() == 0) {
+
+            System.out.println("Non trovati");
+            System.out.println("(╯°□°）╯︵ ┻━┻");
+        }else {
+            System.out.println("Trovati n: " + numeroBigliettiTrovati);
+            System.out.println("(✿◠‿◠)");
+        }
+
+
+        return mezzo.getListaBiglietti().size();
+    }
+
+
 }

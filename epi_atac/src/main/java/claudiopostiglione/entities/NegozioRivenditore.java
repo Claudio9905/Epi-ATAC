@@ -18,6 +18,9 @@ public class NegozioRivenditore extends PuntoEmissione {
     @Column(name = "Orario_Chiusura", nullable = false)
     private LocalTime orarioChiusura;
 
+    public NegozioRivenditore(){
+
+    }
 
     public NegozioRivenditore(String posizione, String proprietario, String nomeLocale, LocalTime orarioApertura, LocalTime orarioChiusura) {
         super(posizione);
