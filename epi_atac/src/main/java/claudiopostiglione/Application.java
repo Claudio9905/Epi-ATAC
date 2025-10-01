@@ -151,45 +151,7 @@ public class Application {
 
 //        System.out.println(gvDao.totalSoldTicketsInSalePlace("25d38f55-1c5c-453c-9da6-a0ea24df1089"));
 
-        TrattaDAO tDao = new TrattaDAO(em);
-        Tratta t1 = new Tratta(r.nextInt(180), "Padova", "Verona");
-        Tratta t2 = new Tratta(r.nextInt(180), "Bologna", "Ferrara");
-        Tratta t3 = new Tratta(r.nextInt(180), "Roma centro", "Roma termini");
-        Tratta t4 = new Tratta(r.nextInt(180), "Napoli Garibaldi", "Fuorigrotta");
-        Tratta t5 = new Tratta(r.nextInt(180), "Roma Termini", "Colle Mattia");
-        Tratta t6 = new Tratta(r.nextInt(180), "Padova", "Colli Euganei");
-        tDao.save(t1);
-        tDao.save(t2);
-        tDao.save(t3);
-        tDao.save(t4);
-        tDao.save(t5);
-        tDao.save(t6);
 
-        MezzoTrattaDAO mtDao = new MezzoTrattaDAO(em);
-        MezzoTratta mt1 = new MezzoTratta(LocalTime.of(8, 20, 0), LocalTime.of(9,30, 0), t1, m2);
-        MezzoTratta mt2 = new MezzoTratta(LocalTime.of(12, 30, 0), LocalTime.of(15,30, 0), t3, m4);
-        MezzoTratta mt3 = new MezzoTratta(LocalTime.of(9, 36, 0), LocalTime.of(9,59, 0), t2, m3);
-        MezzoTratta mt4 = new MezzoTratta(LocalTime.of(15, 20, 0), LocalTime.of(19,55, 0), t4, m1);
-        MezzoTratta mt5 = new MezzoTratta(LocalTime.of(16, 20, 0), LocalTime.of(18,40, 0), t6, m2);
-        mtDao.save(mt1);
-        mtDao.save(mt2);
-        mtDao.save(mt3);
-        mtDao.save(mt4);
-        mtDao.save(mt5);
-
-        StatoMezzoDAO smDao = new StatoMezzoDAO(em);
-        StatoMezzo sm1 = new StatoMezzo(m1, TipoStatoMezzo.IN_MATUTENZIONE, LocalDate.of(2021, 11, 30), LocalDate.of(2022, 1, 30), "Ruote tagliate");
-        StatoMezzo sm2 = new StatoMezzo(m2, TipoStatoMezzo.IN_SERVIZIO, LocalDate.of(2024, 11, 30), null);
-        StatoMezzo sm3 = new StatoMezzo(m4, TipoStatoMezzo.IN_SERVIZIO, LocalDate.of(2022, 11, 30), null);
-        StatoMezzo sm4 = new StatoMezzo(m1, TipoStatoMezzo.IN_MATUTENZIONE, LocalDate.of(2025, 11, 30), null, "Motore scoppiato");
-        StatoMezzo sm5 = new StatoMezzo(m3, TipoStatoMezzo.IN_MATUTENZIONE, LocalDate.of(2021, 11, 30), LocalDate.of(2023, 1, 30), "Posti da sostituire");
-        StatoMezzo sm6 = new StatoMezzo(m3, TipoStatoMezzo.IN_SERVIZIO, LocalDate.of(2023, 1, 31), null);
-        smDao.save(sm1);
-        smDao.save(sm2);
-        smDao.save(sm3);
-        smDao.save(sm4);
-        smDao.save(sm5);
-        smDao.save(sm6);
         //-----------------------------------------------------------------------------------------------------------
 
         System.out.println("|---               |----------|                                                                                                             ---|");
@@ -201,12 +163,12 @@ public class Application {
         System.out.println("| Salve, benvenuto ad EPI-ATAC, prego, identificarsi come utente o amministratore: |--(1 Utente) / (2 Amministratore)--| ");
         int scelta = Integer.parseInt(scanner.nextLine());
 
-        switch (scelta){
+        switch (scelta) {
 
             case 1:
                 System.out.println("Sei già registrato? |--(1 - SI) / (2 - NO)--|");
                 scelta = Integer.parseInt(scanner.nextLine());
-                if(scelta == 1){
+                if (scelta == 1) {
                     utenteRegistrato();
                 } else {
 
@@ -226,7 +188,6 @@ public class Application {
         System.out.println("|--------------------------------");
 
 
-
         System.out.println(isTheSubValid("b9b39507-1522-4da7-87ff-13ed178ceb3a", "10b72c5d-3767-4210-8cde-913ed88f4012", em));
     }
 
@@ -237,13 +198,15 @@ public class Application {
         return LocalDate.ofEpochDay(randomDay);
     }
 
-    public static void utenteRegistrato(){
+    public static void utenteRegistrato() {
         System.out.println("");
     }
 
-    public static void utenteNonRegistrato(){
+    public static void utenteNonRegistrato() {
         System.out.println("");
-    public static boolean isTheSubValid(String idAbbonamento, String idTessera, EntityManager em){
+    }
+
+    public static boolean isTheSubValid(String idAbbonamento, String idTessera, EntityManager em) {
         UUID idTesseraUuid = UUID.fromString(idTessera);
         TesseraUtenteDAO tuDao = new TesseraUtenteDAO(em);
         TesseraUtente tu = tuDao.findTesseraUtenteById(idTesseraUuid);
@@ -252,13 +215,13 @@ public class Application {
 
         List<Abbonamento> abbonamenti = tu.getAbbonamento();
         Abbonamento abbCercato = abbonamenti.stream().filter(a ->
-            a.getId().equals(idAbbonamentoUuid)
+                a.getId().equals(idAbbonamentoUuid)
         ).toList().getFirst();
         if (abbCercato.isValido()) {
             System.out.println("L'abbonamento è valido!");
         } else {
             System.out.println("L'abbonamento non è valido");
         }
-            return abbCercato.isValido();
+        return abbCercato.isValido();
     }
 }
