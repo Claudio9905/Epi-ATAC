@@ -20,8 +20,8 @@ public class Mezzo {
     @Column(name = "Capienza", nullable = false)
     private int capienza;
 
-    @OneToMany(mappedBy = "mezzoObliterazione")
-    private List<Biglietto> listaBiglietti;
+    @OneToMany(mappedBy = "mezzo")
+    private List<GestioneVendita> listaBiglietti;
 
     @OneToMany(mappedBy = "mezzo")
     private List<StatoMezzo> listaStorico;
@@ -59,11 +59,11 @@ public class Mezzo {
         this.capienza = capienza;
     }
 
-    public List<Biglietto> getListaBiglietti() {
+    public List<GestioneVendita> getListaBiglietti() {
         return listaBiglietti;
     }
 
-    public void setListaBiglietti(List<Biglietto> listaBiglietti) {
+    public void setListaBiglietti(List<GestioneVendita> listaBiglietti) {
         this.listaBiglietti = listaBiglietti;
     }
 

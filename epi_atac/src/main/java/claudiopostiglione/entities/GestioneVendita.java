@@ -23,13 +23,18 @@ public abstract class GestioneVendita {
     @JoinColumn(name = "punto_emissione", nullable = false)
     protected PuntoEmissione puntoEmissione;
 
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    protected Mezzo mezzo;
+
     //Costruttori
     public GestioneVendita() {
     }
 
-    public GestioneVendita(LocalDate dataAcquisto, PuntoEmissione puntoEmissione) {
+    public GestioneVendita(LocalDate dataAcquisto, PuntoEmissione puntoEmissione, Mezzo mezzo) {
         this.dataAcquisto = dataAcquisto;
         this.puntoEmissione = puntoEmissione;
+        this.mezzo = mezzo;
     }
 
 
@@ -45,8 +50,6 @@ public abstract class GestioneVendita {
     public void setDataAcquisto(LocalDate dataAcquisto) {
         this.dataAcquisto = dataAcquisto;
     }
-
-
 
 
     public PuntoEmissione getPuntoEmissione() {

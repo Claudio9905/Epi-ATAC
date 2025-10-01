@@ -4,7 +4,6 @@ package claudiopostiglione.entities;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 @Entity
 @Table(name = "Utente")
@@ -12,8 +11,8 @@ public class Utente {
 
     //Attributi
     @Id
-    @GeneratedValue
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
     @Column(name = "Amministratore", nullable = false)
     private boolean amministratore;
     @Column(name = "Nome", nullable = false)
@@ -41,7 +40,7 @@ public class Utente {
     }
 
     //Metodi
-    public UUID getId() {
+    public long getId() {
         return id;
     }
 
