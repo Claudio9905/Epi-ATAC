@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Random;
+import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Application {
@@ -19,6 +20,7 @@ public class Application {
 
     public static void main(String[] args) {
         EntityManager em = emf.createEntityManager();
+        Scanner scanner = new Scanner(System.in);
         System.out.println("Connessione al database riuscita!");
 
         Faker f = new Faker();
@@ -143,6 +145,43 @@ public class Application {
         smDao.save(sm4);
         smDao.save(sm5);
         smDao.save(sm6);
+        //-----------------------------------------------------------------------------------------------------------
+
+        System.out.println("|---               |----------|                                                                                                             ---|");
+        System.out.println("||---------------- | EPI-ATAC | --------------------------------||Home|| / ||About Us|| / ||Services|| /------------------------------||");
+        System.out.println("|---               |----------|                                                                                                             ---|");
+        System.out.println("\n");
+
+        System.out.println("|- Fase Login -|");
+        System.out.println("| Salve, benvenuto ad EPI-ATAC, prego, identificarsi come utente o amministratore: |--(1 Utente) / (2 Amministratore)--| ");
+        int scelta = Integer.parseInt(scanner.nextLine());
+
+        switch (scelta){
+
+            case 1:
+                System.out.println("Sei già registrato? |--(1 - SI) / (2 - NO)--|");
+                scelta = Integer.parseInt(scanner.nextLine());
+                if(scelta == 1){
+                    utenteRegistrato();
+                } else {
+
+                }
+        }
+
+        // Qui verranno mostrate le tratte disponibili
+        System.out.println("|- Sezione Tratte -|");
+        System.out.println("|--------------------------------");
+        System.out.println("|");
+        System.out.println("|");
+        System.out.println("|");
+        System.out.println("|");
+        System.out.println("|");
+        System.out.println("|");
+        System.out.println("|");
+        System.out.println("|--------------------------------");
+
+
+
     }
 
     public static LocalDate getRandomDate(LocalDate start, LocalDate end) {
@@ -150,5 +189,13 @@ public class Application {
         long endtEpochDay = end.toEpochDay();
         long randomDay = ThreadLocalRandom.current().nextLong(startEpochDay, endtEpochDay);
         return LocalDate.ofEpochDay(randomDay);
+    }
+
+    public static void utenteRegistrato(){
+        System.out.println("");
+    }
+
+    public static void utenteNonRegistrato(){
+        System.out.println("");
     }
 }
