@@ -9,7 +9,6 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
@@ -20,11 +19,12 @@ public class Application {
 
     public static EntityManagerFactory emf = Persistence.createEntityManagerFactory("epi_atac");
 
+    public static Scanner scanner = new Scanner(System.in);
+    public static Random r = new Random();
+
     public static void main(String[] args) {
         EntityManager em = emf.createEntityManager();
-        Scanner scanner = new Scanner(System.in);
         Faker f = new Faker();
-        Random r = new Random();
 
         //Oggetti DAO per interaggire con il DB
         UtenteDAO uDao = new UtenteDAO(em);
@@ -37,159 +37,159 @@ public class Application {
         MezzoTrattaDAO mtd = new MezzoTrattaDAO(em);
 
         // Creazione oggetto Utente
-        Supplier<Utente> utenteSupplier = () -> {
-            boolean rdnBoolean = r.nextBoolean();
-            return new Utente(f.name().firstName(), f.name().lastName(), f.internet().emailAddress(), getRandomDate(LocalDate.of(1945, 1, 1), LocalDate.now()), rdnBoolean);
-        };
-
-        for (int i = 0; i < 20; i++) {
-            uDao.save(utenteSupplier.get());
-        }
-
-
-        //Creazione oggetto tesseraUtente
-        List<Long> longUsciti = new ArrayList<>();
-        Supplier<TesseraUtente> tesseraUtenteSupplier = () -> {
-            LocalDate dataTessera = getRandomDate(LocalDate.of(2015, 1, 1), LocalDate.now());
-
-            long num;
-            while (true) {
-                num = r.nextLong(1, uDao.findNumeroUtenti() + 1);
-                if (!longUsciti.contains(num)) {
-                    longUsciti.add(num);
-                    break;
-                }
-            }
-
-            return new TesseraUtente(dataTessera, uDao.findUtenteById(num));
-        };
-
-        for (int i = 0; i < uDao.findNumeroUtenti(); i++) {
-            td.save(tesseraUtenteSupplier.get());
-        }
-
-        //Creazione oggetto Mezzo
-        Supplier<Mezzo> mezzoSupplier = () -> {
-
-            String[] tipoMezzo = {"TRAM", "AUTOBUS"};
-            TipoMezzo mezzo = TipoMezzo.valueOf(tipoMezzo[r.nextInt(0, 2)]);
-
-            return new Mezzo(mezzo, r.nextInt(0, 95));
-        };
-
-        for (int i = 0; i < 20; i++) {
-            md.save(mezzoSupplier.get());
-        }
-
-        //Creazione oggetto DistributoreAutomatico
-        Supplier<DistributoreAutomatico> distributoreAutomaticoSupplier = () -> new DistributoreAutomatico(f.address().cityName(), r.nextBoolean());
-
-        for (int i = 0; i < 10; i++) {
-            ped.save(distributoreAutomaticoSupplier.get());
-        }
-
-        //Creazione oggetto NegozioRivenditore
-        Supplier<NegozioRivenditore> negozioRivenditoreSupplier = () -> new NegozioRivenditore(f.address().cityName(), f.lordOfTheRings().character(), f.company().name(), LocalTime.of(9, 9), LocalTime.of(18, 0));
-        for (int i = 0; i < 10; i++) {
-            ped.save(negozioRivenditoreSupplier.get());
-        }
-
-        //Creazione oggetto Biglietto
-        Supplier<Biglietto> bigliettoSupplier = () -> {
-
-            List<Mezzo> listaMezzo = md.findAllMezzo();
-            Mezzo mezzo = listaMezzo.get(r.nextInt(0, listaMezzo.size()));
-
-            List<PuntoEmissione> listaPuntiEmissione = ped.findAllPuntoEmissione();
-            PuntoEmissione punto = listaPuntiEmissione.get(r.nextInt(0, listaPuntiEmissione.size()));
-
-            boolean rdmBoolean = r.nextBoolean();
-
-            LocalDate dataAcquisto = getRandomDate(LocalDate.of(2024, 1, 1), LocalDate.of(2025, 1, 1));
-
-            if (rdmBoolean) {
-                return new Biglietto(dataAcquisto, punto, dataAcquisto.plusDays(r.nextLong(0, 5)), mezzo);
-            } else {
-                return new Biglietto(getRandomDate(LocalDate.of(2024, 1, 1), LocalDate.of(2025, 1, 1)), punto, mezzo);
-            }
-
-        };
-
-        for (int i = 0; i < 20; i++) {
-            gd.save(bigliettoSupplier.get());
-        }
-
-        //Creazione oggetto abbonamento
-        Supplier<Abbonamento> abbonamentoSupplier = () -> {
-
-            String[] tipoAbbonamento = {"MENSILE", "SETTIMANALE"};
-            TipoAbbonamento tipo = TipoAbbonamento.valueOf(tipoAbbonamento[r.nextInt(0, 2)]);
-
-            List<PuntoEmissione> listaPuntiEmissione = ped.findAllPuntoEmissione();
-            PuntoEmissione punto = listaPuntiEmissione.get(r.nextInt(0, listaPuntiEmissione.size()));
-
-            List<TesseraUtente> listaTesseraUtente = td.findAllTesseraUtente();
-            TesseraUtente tessera = listaTesseraUtente.get(r.nextInt(0, listaTesseraUtente.size()));
-
-            return new Abbonamento(tipo, getRandomDate(LocalDate.of(2024, 1, 1), LocalDate.now()), punto, tessera);
-        };
-
-        for (int i = 0; i < 20; i++) {
-            gd.save(abbonamentoSupplier.get());
-        }
-
-        //Creazione oggetto Tratta
-        Supplier<Tratta> trattaSupplier = () -> {
-            return new Tratta(r.nextInt(45, 120), f.lordOfTheRings().location(), f.lordOfTheRings().location());
-        };
-
-        for (int i = 0; i < 10; i++) {
-            trd.save(trattaSupplier.get());
-        }
-
-        //Creazione oggetto MezzaTratta
-        Supplier<MezzoTratta> mezzoTrattaSupplier = () -> {
-
-            int orarioPh = r.nextInt(1, 23);
-            int orarioPm = r.nextInt(1, 59);
-            LocalTime orarioP = LocalTime.of(orarioPh, orarioPm);
-
-            List<Tratta> listaTratta = trd.findAllTratta();
-            Tratta tratta = listaTratta.get(r.nextInt(0, listaTratta.size()));
-
-            List<Mezzo> listaMezzo = md.findAllMezzo();
-            Mezzo mezzo = listaMezzo.get(r.nextInt(0, listaMezzo.size()));
-
-            return new MezzoTratta(orarioP, orarioP.plusHours(4), tratta, mezzo);
-        };
-
-        for(int i = 0; i < 20; i++){
-            mtd.save(mezzoTrattaSupplier.get());
-        }
-
-        //Creazione oggetto StatoMezzo
-        Supplier<StatoMezzo> statoMezzoSupplier = () -> {
-
-            List<Mezzo> listaMezzo = md.findAllMezzo();
-            Mezzo mezzo = listaMezzo.get(r.nextInt(0, listaMezzo.size()));
-
-            String[] tipoStato = {"IN_SERVIZIO", "IN_MANUTENZIONE"};
-            TipoStatoMezzo tipo = TipoStatoMezzo.valueOf(tipoStato[r.nextInt(0, 1)]);
-
-            boolean rdmBoolean = r.nextBoolean();
-            LocalDate dataInizio = getRandomDate(LocalDate.of(2024, 1, 1), LocalDate.now());
-
-            if (rdmBoolean) {
-                return new StatoMezzo(mezzo, tipo, dataInizio, dataInizio.plusYears(4));
-            } else {
-                return new StatoMezzo(mezzo, tipo, dataInizio, dataInizio.minusMonths(2), "Guasto al veicolo");
-            }
-
-        };
-
-        for(int i = 0; i < 20; i++){
-            std.save(statoMezzoSupplier.get());
-        }
+//        Supplier<Utente> utenteSupplier = () -> {
+//            boolean rdnBoolean = r.nextBoolean();
+//            return new Utente(f.lordOfTheRings().character(), f.name().lastName(), f.internet().emailAddress(), getRandomDate(LocalDate.of(1945, 1, 1), LocalDate.now()), rdnBoolean);
+//        };
+//
+//        for (int i = 0; i < 20; i++) {
+//            uDao.save(utenteSupplier.get());
+//        }
+//
+//
+//        //Creazione oggetto tesseraUtente
+//        List<Long> longUsciti = new ArrayList<>();
+//        Supplier<TesseraUtente> tesseraUtenteSupplier = () -> {
+//            LocalDate dataTessera = getRandomDate(LocalDate.of(2015, 1, 1), LocalDate.now());
+//
+//            long num;
+//            while (true) {
+//                num = r.nextLong(1, uDao.findNumeroUtenti() + 1);
+//                if (!longUsciti.contains(num)) {
+//                    longUsciti.add(num);
+//                    break;
+//                }
+//            }
+//
+//            return new TesseraUtente(dataTessera, uDao.findUtenteById(num));
+//        };
+//
+//        for (int i = 0; i < uDao.findNumeroUtenti(); i++) {
+//            td.save(tesseraUtenteSupplier.get());
+//        }
+//
+//        //Creazione oggetto Mezzo
+//        Supplier<Mezzo> mezzoSupplier = () -> {
+//
+//            String[] tipoMezzo = {"TRAM", "AUTOBUS"};
+//            TipoMezzo mezzo = TipoMezzo.valueOf(tipoMezzo[r.nextInt(0, 2)]);
+//
+//            return new Mezzo(mezzo, r.nextInt(0, 95));
+//        };
+//
+//        for (int i = 0; i < 20; i++) {
+//            md.save(mezzoSupplier.get());
+//        }
+//
+//        //Creazione oggetto DistributoreAutomatico
+//        Supplier<DistributoreAutomatico> distributoreAutomaticoSupplier = () -> new DistributoreAutomatico(f.address().cityName(), r.nextBoolean());
+//
+//        for (int i = 0; i < 10; i++) {
+//            ped.save(distributoreAutomaticoSupplier.get());
+//        }
+//
+//        //Creazione oggetto NegozioRivenditore
+//        Supplier<NegozioRivenditore> negozioRivenditoreSupplier = () -> new NegozioRivenditore(f.address().cityName(), f.lordOfTheRings().character(), f.company().name(), LocalTime.of(9, 9), LocalTime.of(18, 0));
+//        for (int i = 0; i < 10; i++) {
+//            ped.save(negozioRivenditoreSupplier.get());
+//        }
+//
+//        //Creazione oggetto Biglietto
+//        Supplier<Biglietto> bigliettoSupplier = () -> {
+//
+//            List<Mezzo> listaMezzo = md.findAllMezzo();
+//            Mezzo mezzo = listaMezzo.get(r.nextInt(0, listaMezzo.size()));
+//
+//            List<PuntoEmissione> listaPuntiEmissione = ped.findAllPuntoEmissione();
+//            PuntoEmissione punto = listaPuntiEmissione.get(r.nextInt(0, listaPuntiEmissione.size()));
+//
+//            boolean rdmBoolean = r.nextBoolean();
+//
+//            LocalDate dataAcquisto = getRandomDate(LocalDate.of(2024, 1, 1), LocalDate.of(2025, 1, 1));
+//
+//            if (rdmBoolean) {
+//                return new Biglietto(dataAcquisto, punto, dataAcquisto.plusDays(r.nextLong(0, 5)), mezzo);
+//            } else {
+//                return new Biglietto(getRandomDate(LocalDate.of(2024, 1, 1), LocalDate.of(2025, 1, 1)), punto, mezzo);
+//            }
+//
+//        };
+//
+//        for (int i = 0; i < 20; i++) {
+//            gd.save(bigliettoSupplier.get());
+//        }
+//
+//        //Creazione oggetto abbonamento
+//        Supplier<Abbonamento> abbonamentoSupplier = () -> {
+//
+//            String[] tipoAbbonamento = {"MENSILE", "SETTIMANALE"};
+//            TipoAbbonamento tipo = TipoAbbonamento.valueOf(tipoAbbonamento[r.nextInt(0, 2)]);
+//
+//            List<PuntoEmissione> listaPuntiEmissione = ped.findAllPuntoEmissione();
+//            PuntoEmissione punto = listaPuntiEmissione.get(r.nextInt(0, listaPuntiEmissione.size()));
+//
+//            List<TesseraUtente> listaTesseraUtente = td.findAllTesseraUtente();
+//            TesseraUtente tessera = listaTesseraUtente.get(r.nextInt(0, listaTesseraUtente.size()));
+//
+//            return new Abbonamento(tipo, getRandomDate(LocalDate.of(2024, 1, 1), LocalDate.now()), punto, tessera);
+//        };
+//
+//        for (int i = 0; i < 20; i++) {
+//            gd.save(abbonamentoSupplier.get());
+//        }
+//
+//        //Creazione oggetto Tratta
+//        Supplier<Tratta> trattaSupplier = () -> {
+//            return new Tratta(r.nextInt(45, 120), f.lordOfTheRings().location(), f.lordOfTheRings().location());
+//        };
+//
+//        for (int i = 0; i < 10; i++) {
+//            trd.save(trattaSupplier.get());
+//        }
+//
+//        //Creazione oggetto MezzaTratta
+//        Supplier<MezzoTratta> mezzoTrattaSupplier = () -> {
+//
+//            int orarioPh = r.nextInt(1, 23);
+//            int orarioPm = r.nextInt(1, 59);
+//            LocalTime orarioP = LocalTime.of(orarioPh, orarioPm);
+//
+//            List<Tratta> listaTratta = trd.findAllTratte();
+//            Tratta tratta = listaTratta.get(r.nextInt(0, listaTratta.size()));
+//
+//            List<Mezzo> listaMezzo = md.findAllMezzo();
+//            Mezzo mezzo = listaMezzo.get(r.nextInt(0, listaMezzo.size()));
+//
+//            return new MezzoTratta(orarioP, orarioP.plusHours(4), tratta, mezzo);
+//        };
+//
+//        for (int i = 0; i < 20; i++) {
+//            mtd.save(mezzoTrattaSupplier.get());
+//        }
+//
+//        //Creazione oggetto StatoMezzo
+//        Supplier<StatoMezzo> statoMezzoSupplier = () -> {
+//
+//            List<Mezzo> listaMezzo = md.findAllMezzo();
+//            Mezzo mezzo = listaMezzo.get(r.nextInt(0, listaMezzo.size()));
+//
+//            String[] tipoStato = {"IN_SERVIZIO", "IN_MANUTENZIONE"};
+//            TipoStatoMezzo tipo = TipoStatoMezzo.valueOf(tipoStato[r.nextInt(0, 1)]);
+//
+//            boolean rdmBoolean = r.nextBoolean();
+//            LocalDate dataInizio = getRandomDate(LocalDate.of(2024, 1, 1), LocalDate.now());
+//
+//            if (rdmBoolean) {
+//                return new StatoMezzo(mezzo, tipo, dataInizio, dataInizio.plusYears(4));
+//            } else {
+//                return new StatoMezzo(mezzo, tipo, dataInizio, dataInizio.minusMonths(2), "Guasto al veicolo");
+//            }
+//
+//        };
+//
+//        for (int i = 0; i < 20; i++) {
+//            std.save(statoMezzoSupplier.get());
+//        }
 
 
         System.out.println("Connessione al database riuscita!");
@@ -205,7 +205,7 @@ public class Application {
         System.out.println("|- Sezione Tratte -|");
         System.out.println("|--------------------------------");
         System.out.println("|");
-        List<MezzoTratta> listaMezzoTratte = mtDao.findAllMezzoTratte();
+        List<MezzoTratta> listaMezzoTratte = mtd.findAllMezzoTratte();
         for (int i = 0; i < listaMezzoTratte.size(); i++) {
             Tratta tratta = listaMezzoTratte.get(i).getTratta();
             System.out.println("| " + i + " - Da " + tratta.getZonaPartenza() + " a " + tratta.getCapolinea() + " - Durata: " + tratta.getPercorrenzaPrevista() + " min");
@@ -242,11 +242,15 @@ public class Application {
                     }
 
                 } else {
-                    //utenteNonRegistrato();
+                    utenteNonRegistrato(em);
                 }
                 break;
             case "2":
                 //Sezione amministratore
+                System.out.println("Inserisci il numero utente:");
+                String ID = scanner.nextLine();
+                Utente utenteFound = uDao.findUtenteById(Long.parseLong(ID));
+                amministratore(utenteFound, em);
                 break;
             default:
                 System.out.println("Attenzione, scelta non disponibile, prego riprovare");
@@ -277,76 +281,85 @@ public class Application {
         Random r = new Random();
         GestioneVenditaDAO gvDao = new GestioneVenditaDAO(em);
         MezzoTrattaDAO mtDao = new MezzoTrattaDAO(em);
-        MezzoDAO tDao = new MezzoDAO(em);
+//        MezzoDAO tDao = new MezzoDAO(em);
         PuntoEmissioneDAO peDao = new PuntoEmissioneDAO(em);
         TesseraUtenteDAO tuDao = new TesseraUtenteDAO(em);
         long tuId = utente.getTessera().getTesseraId();
         TesseraUtente tu = tuDao.findTesseraUtenteById(tuId);
-        List<Abbonamento> abbonamentiTot = gvDao.findAbbonamentoByTessera(tu);
 
         int scelta;
 
         do {
             System.out.println("| Ciao " + utente.getNome());
             System.out.println("| Queste sono le opzioni disponibili:");
-            System.out.println("|  - Acquistare biglietto (1) ");
-            System.out.println("|  - Acquistare abbonamento (2) ");
-            System.out.println("|  - Guardare dettagli dello storico dei tuoi abbonamenti (3) ");
-            System.out.println("|  - EXIT (0) ");
+            System.out.println("| 0 - EXIT ");
+            System.out.println("| 1 - Acquistare biglietto ");
+            System.out.println("| 2 - Acquistare abbonamento ");
+            System.out.println("| 3 - Guardare dettagli dello storico dei tuoi abbonamenti ");
             scelta = Integer.parseInt(scanner.nextLine());
             List<PuntoEmissione> listaPE = peDao.findAllPuntoEmissione();
 
             switch (scelta) {
                 case 0:
                     System.out.println("Grazie per aver usufruito dei nostri servizi e buon viaggio!");
+                    System.out.println("(✿◠‿◠)");
                     break;
                 case 1:
                     // Bisogna creare un nuovo biglietto, con mezzo e tratta, tutti da salvare nel database
 //                    System.out.println("Mi dispiace per l'inconveniente ma il nostro sistema è attualmente in manutenzione e le tratte disponibili sono solo: ");
-                    while (true) {
-                        System.out.println("Indica il numero della tratta che vuoi percorrere, indicando il numero scritto sul tabellone");
-                        int numTabellone = Integer.parseInt(scanner.nextLine());
-                        List<MezzoTratta> listaMezzoTratte = mtDao.findAllMezzoTratte();
-                        MezzoTratta mt = listaMezzoTratte.get(numTabellone);
-                        Mezzo mezzo = mt.getMezzo();
-                        if (numTabellone > listaMezzoTratte.size()) {
-                            System.out.println("Numero non valido, riprova");
-                        } else {
-                            gvDao.save(new Biglietto(LocalDate.now(), listaPE.get(r.nextInt(listaPE.size())), mezzo));
-                            System.out.println("Biglietto comprato!");
-                            break;
-                        }
-                    }
+                    creaBiglietto(em);
                     break;
                 case 2:
                     // Creazione di un abbonamento, stabilendo anche la tessera utente
-                    if (!abbonamentiTot.isEmpty()) {
-                        System.out.println("Hai già un abbonamento, non puoi prenderne altri");
-                        break;
-                    }
-                    System.out.println("Che tipo di abbonamento ti serve?");
-                    System.out.println("1 - Mensile");
-                    System.out.println("2 - Settimanale");
-                    while (true) {
-                        int tipoAbb = Integer.parseInt(scanner.nextLine());
-                        TipoAbbonamento tipo;
-                        if (tipoAbb == 2) {
-                            tipo = TipoAbbonamento.SETTIMANALE;
-                            gvDao.save(new Abbonamento(tipo, LocalDate.now(), listaPE.get(r.nextInt(listaPE.size())), tu));
-                            System.out.println("Abbonamento settimanale salvato!");
+                    try {
+                        List<Abbonamento> abbonamentiTot = gvDao.findAbbonamentoByTessera(tu);
+                        if (!abbonamentiTot.isEmpty()) {
+                            System.out.println("Hai già un abbonamento, non puoi prenderne altri");
                             break;
-                        } else if (tipoAbb == 1) {
-                            tipo = TipoAbbonamento.MENSILE;
-                            gvDao.save(new Abbonamento(tipo, LocalDate.now(), listaPE.get(r.nextInt(r.nextInt(listaPE.size()))), tu));
-                            System.out.println("Abbonamento mensile salvato!");
-                            break;
-                        } else {
-                            System.out.println("Numero non valido, riprova");
                         }
+                        System.out.println("Che tipo di abbonamento ti serve?");
+                        System.out.println("1 - Mensile");
+                        System.out.println("2 - Settimanale");
+
+                        TipoAbbonamento tipo;
+                        while (true) {
+                            int tipoAbb = Integer.parseInt(scanner.nextLine());
+                            if (tipoAbb == 2) {
+                                tipo = TipoAbbonamento.SETTIMANALE;
+                                break;
+                            } else if (tipoAbb == 1) {
+                                tipo = TipoAbbonamento.MENSILE;
+                                break;
+                            } else {
+                                System.out.println("Numero non valido, riprova");
+                            }
+                        }
+                        System.out.println("Scegli dal tabellone la tratta");
+                        while (true) {
+                            int numTabellone = Integer.parseInt(scanner.nextLine());
+                            List<MezzoTratta> listaMezzoTratte = mtDao.findAllMezzoTratte();
+                            MezzoTratta mt = listaMezzoTratte.get(numTabellone);
+                            Mezzo mezzo = mt.getMezzo();
+                            if (numTabellone > listaMezzoTratte.size()) {
+                                System.out.println("Numero non valido, riprova");
+                            } else {
+                                gvDao.save(new Abbonamento(tipo, LocalDate.now(), listaPE.get(r.nextInt(listaPE.size())), tu, mezzo));
+                                System.out.println("Abbonamento salvato!");
+                                break;
+                            }
+                        }
+                    } catch (Exception e) {
+                        System.err.println(e.getMessage());
                     }
                     break;
                 case 3:
-                    abbonamentiTot.forEach(System.out::println);
+                    try {
+                        List<Abbonamento> abbonamentiTot = gvDao.findAbbonamentoByTessera(tu);
+                        if (abbonamentiTot.isEmpty()) System.out.println("Non hai mai avuto abbonamenti");
+                        abbonamentiTot.forEach(System.out::println);
+                    } catch (Exception e) {
+                        System.err.println(e.getMessage());
+                    }
                     break;
                 default:
                     System.out.println("Attenzione, scelta non disponibile, prego, riprovare");
@@ -356,8 +369,33 @@ public class Application {
 
     }
 
-    public static void utenteNonRegistrato() {
-        System.out.println("");
+    public static void utenteNonRegistrato(EntityManager em) {
+        System.out.println("| Queste sono le opzioni disponibili:");
+        System.out.println("| 0 - EXIT ");
+        System.out.println("| 1 - Acquistare biglietto ");
+        while (true) {
+            try {
+                int scelta = Integer.parseInt(scanner.nextLine());
+                switch (scelta) {
+                    case 0:
+                        System.out.println("Grazie per aver usufruito dei nostri servizi e buon viaggio!");
+                        System.out.println("(✿◠‿◠)");
+                        break;
+                    case 1:
+                        creaBiglietto(em);
+                        System.out.println("Grazie per aver usufruito dei nostri servizi e buon viaggio!");
+                        System.out.println("(✿◠‿◠)");
+                        break;
+                    default:
+                        System.out.println("Scelta non disponibile, prego riprovare");
+                        break;
+                }
+                break;
+            } catch (Exception e) {
+                System.err.println(e.getMessage());
+            }
+        }
+
     }
 
 
@@ -401,5 +439,39 @@ public class Application {
         return mezzo.getListaGestioneVendità().size();
     }
 
+    public static void creaBiglietto(EntityManager em) {
+        GestioneVenditaDAO gvDao = new GestioneVenditaDAO(em);
+        MezzoTrattaDAO mtDao = new MezzoTrattaDAO(em);
+        PuntoEmissioneDAO peDao = new PuntoEmissioneDAO(em);
+        List<PuntoEmissione> listaPE = peDao.findAllPuntoEmissione();
+        while (true) {
+            try {
+
+                System.out.println("Indica il numero della tratta che vuoi percorrere, indicando il numero scritto sul tabellone");
+                int numTabellone = Integer.parseInt(scanner.nextLine());
+                List<MezzoTratta> listaMezzoTratte = mtDao.findAllMezzoTratte();
+                MezzoTratta mt = listaMezzoTratte.get(numTabellone);
+                Mezzo mezzo = mt.getMezzo();
+                if (numTabellone > listaMezzoTratte.size()) {
+                    System.out.println("Numero non valido, riprova");
+                } else {
+                    gvDao.save(new Biglietto(LocalDate.now(), listaPE.get(r.nextInt(listaPE.size())), mezzo));
+                    break;
+                }
+
+            } catch (Exception e) {
+                System.err.println(e.getMessage());
+            }
+        }
+    }
+
+    public static void amministratore(Utente utente, EntityManager em) {
+        System.out.println("| Ciao " + utente.getNome());
+        System.out.println("| Queste sono le opzioni disponibili:");
+        System.out.println("| 0 - EXIT (0) ");
+        System.out.println("| 1 - Calcolare il tempo medio effettivo di percorrenza di un mezzo ");
+        System.out.println("| 2 - Controllare il numero di biglietti/abbonamenti in un periodo");
+        System.out.println("| 3 - Tenere traccia del numero di volte che un mezzo percorre una tratta e del tempo effettivo di percorrenza di esse ");
+    }
 
 }

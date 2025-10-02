@@ -35,6 +35,11 @@ public class Abbonamento extends GestioneVendita {
         this.tessera = tessera;
     }
 
+    public Abbonamento(TipoAbbonamento tipo, LocalDate dataAcquisto, PuntoEmissione puntoEmissione, TesseraUtente tessera, Mezzo mezzo) {
+        this(tipo, dataAcquisto, puntoEmissione, tessera);
+        this.mezzoObliterazione = mezzo;
+    }
+
     //Metodi
     public TipoAbbonamento getTipo() {
         return tipo;
