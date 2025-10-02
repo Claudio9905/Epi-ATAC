@@ -1,5 +1,6 @@
 package claudiopostiglione.dao;
 
+import claudiopostiglione.entities.Biglietto;
 import claudiopostiglione.entities.GestioneVendita;
 import claudiopostiglione.entities.PuntoEmissione;
 import claudiopostiglione.exceptions.IdNotFoundException;
@@ -80,17 +81,21 @@ public class GestioneVenditaDAO {
         }
     }
 
-//    public boolean isTheSubValid(String idAbbonamento, String idTessera) {
-//        TypedQuery<GestioneVendita> query = em.createQuery("SELECT a FROM Abbonamento a WHERE tessera = :tessera AND id = :idTessera", GestioneVendita.class);
-//        query.setParameter("mezzo", mezzo);
-//        int found = query.getResultList().toArray().length;
-//        if (found != 0) {
-//            System.out.println("Sono stati venduti dei biglietti nel mezzo con id " + id);
-//            System.out.println("(✿◠‿◠)");
-//        } else {
-//            System.out.println("Non sono stati venduti biglietti nel mezzo con id " + id);
-//            System.out.println("(╯°□°）╯︵ ┻━┻");
-//        }
-//        return found;
-//    }
+    public int totalSoldTicketsInAPeriod(LocalDate startDate, LocalDate endDate) {
+        TypedQuery<Biglietto> query = em.createQuery("SELECT b FROM Biglietto b WHERE DataObliterazione BETWEEN :startDate AND :endDate", Biglietto.class);
+        query.setParameter("startDate", startDate);
+        query.setParameter("endDate", endDate);
+        int found = query.getResultList().size();
+        if (found == 0) {
+            System.out.println("Non sono stati obliterari biglietti tra " + startDate + " e " + endDate);
+            System.out.println("(╯°□°）╯︵ ┻━┻");
+        } else if (found == 1) {
+            System.out.println("È stato obliterato " + found + " biglietto tra " + startDate + " e " + endDate);
+            System.out.println("(✿◠‿◠)");
+        } else {
+            System.out.println("Sono stati obliterati " + found + " biglietti tra " + startDate + " e " + endDate);
+            System.out.println("☞ﾟヮﾟ)☞");
+        }
+        return found;
+    }
 }

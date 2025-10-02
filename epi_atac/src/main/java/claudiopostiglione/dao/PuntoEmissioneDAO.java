@@ -1,6 +1,5 @@
 package claudiopostiglione.dao;
 
-import claudiopostiglione.entities.GestioneVendita;
 import claudiopostiglione.entities.PuntoEmissione;
 import claudiopostiglione.exceptions.IdNotFoundException;
 import jakarta.persistence.EntityManager;
@@ -23,9 +22,14 @@ public class PuntoEmissioneDAO {
         System.out.println("Punto di emissione convenzionato! :) ");
     }
 
-    public PuntoEmissione findPuntoEmissioneById(UUID id){
-        PuntoEmissione found = em.find(PuntoEmissione.class, id);
-        if(found == null) throw new IdNotFoundException(id);
-        return found;
+    public PuntoEmissione findPuntoEmissioneById(UUID id) {
+        try {
+            PuntoEmissione found = em.find(PuntoEmissione.class, id);
+            if (found == null) throw new IdNotFoundException(id);
+            return found;
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            return null;
+        }
     }
 }
