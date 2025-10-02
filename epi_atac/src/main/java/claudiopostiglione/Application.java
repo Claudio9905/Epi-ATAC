@@ -2,6 +2,7 @@ package claudiopostiglione;
 
 import claudiopostiglione.dao.*;
 import claudiopostiglione.entities.*;
+import claudiopostiglione.exceptions.IdNotFoundException;
 import claudiopostiglione.exceptions.emailUserNotFoundException;
 import claudiopostiglione.dao.GestioneVenditaDAO;
 import claudiopostiglione.dao.MezzoDAO;
@@ -243,55 +244,55 @@ public class Application {
 
         //-----------------------------------------------------------------------------------------------------------
 
-//        System.out.println("|---               |----------|                                 |------------------------------------|                              ---|");
-//        System.out.println("||---------------- | EPI-ATAC | --------------------------------||Home|| / ||About Us|| / ||Services|| /------------------------------||");
-//        System.out.println("|---               |----------|                                 |------------------------------------|                              ---|");
-//        System.out.println("\n");
-//
-//        // Qui verranno mostrate le tratte disponibili
-//        System.out.println("|- Sezione Tratte -|");
-//        System.out.println("|--------------------------------");
-//        System.out.println("|");
-//        System.out.println("|");
-//        System.out.println("|");
-//        System.out.println("|");
-//        System.out.println("|");
-//        System.out.println("|");
-//        System.out.println("|");
-//        System.out.println("|--------------------------------");
-//
-//        System.out.println("|- Login -|");
-//        System.out.println("| Salve, benvenuto ad EPI-ATAC, prego, identificarsi come utente o amministratore: |--(1 Utente) / (2 Amministratore) / (0 EXIT) --| ");
-//        int scelta = Integer.parseInt(scanner.nextLine());
-//
-//        switch (scelta) {
-//
-//            case 0:
-//                break;
-//            case 1:
-//                //Sezione utente
-//                System.out.println("Sei già registrato? |--(1 - SI) / (2 - NO)--|");
-//                scelta = Integer.parseInt(scanner.nextLine());
-//                if (scelta == 1) {
-//                    try {
-//                        System.out.println("| Inserisci le credenziali: --( E-mail )--");
-//                        String emailUtente = scanner.nextLine();
-//                        Utente utenteFound = uDao.findUtenteByEmail(emailUtente);
-//                        utenteRegistrato(utenteFound);
-//                    } catch (emailUserNotFoundException er) {
-//                        System.out.println(er.getMessage());
-//                    }
-//
-//                } else {
-//                    //utenteNonRegistrato();
-//                }
-//                break;
-//            case 2:
-//                //Sezione amministratore
-//                break;
-//            default:
-//                System.out.println("Attenzione, scelta non disponibile, prego riprovare");
-//        }
+        System.out.println("|---               |----------|                                 |------------------------------------|                              ---|");
+        System.out.println("||---------------- | EPI-ATAC | --------------------------------||Home|| / ||About Us|| / ||Services|| /------------------------------||");
+        System.out.println("|---               |----------|                                 |------------------------------------|                              ---|");
+        System.out.println("\n");
+
+        // Qui verranno mostrate le tratte disponibili
+        System.out.println("|- Sezione Tratte -|");
+        System.out.println("|--------------------------------");
+        System.out.println("|");
+        System.out.println("|");
+        System.out.println("|");
+        System.out.println("|");
+        System.out.println("|");
+        System.out.println("|");
+        System.out.println("|");
+        System.out.println("|--------------------------------");
+
+        System.out.println("|- Login -|");
+        System.out.println("| Salve, benvenuto ad EPI-ATAC, prego, identificarsi come utente o amministratore: |--(1 Utente) / (2 Amministratore) / (0 EXIT) --| ");
+        int scelta = Integer.parseInt(scanner.nextLine());
+
+        switch (scelta) {
+
+            case 0:
+                break;
+            case 1:
+                //Sezione utente
+                System.out.println("Sei già registrato? |--(1 - SI) / (2 - NO)--|");
+                scelta = Integer.parseInt(scanner.nextLine());
+                if (scelta == 1) {
+                    try {
+                        System.out.println("| Inserisci le credenziali: --( ID Utente )--");
+                        String ID = scanner.nextLine();
+                        Utente utenteFound = uDao.findUtenteById(Long.parseLong(ID));
+                        utenteRegistrato(utenteFound);
+                    } catch (IdNotFoundException er) {
+                        System.out.println(er.getMessage());
+                    }
+
+                } else {
+                    //utenteNonRegistrato();
+                }
+                break;
+            case 2:
+                //Sezione amministratore
+                break;
+            default:
+                System.out.println("Attenzione, scelta non disponibile, prego riprovare");
+        }
 
 
         // System.out.println(isTheSubValid("b9b39507-1522-4da7-87ff-13ed178ceb3a", "10b72c5d-3767-4210-8cde-913ed88f4012", em));
@@ -320,7 +321,7 @@ public class Application {
         do {
             System.out.println("| Ciao " + utente.getNome());
             System.out.println("| Queste sono le opzioni disponibili:");
-            System.out.println("|  - Acquista biglietto (1) ");
+            System.out.println("|  - Acquistare biglietto (1) ");
             System.out.println("|  - Acquistare abbonamento (2) ");
             System.out.println("|  - Usare abbonamento (3) ");
             System.out.println("|  - EXIT (0) ");
@@ -329,6 +330,7 @@ public class Application {
             switch (scelta) {
                 case 1:
                     // Bisogna creare un nuovo biglietto, con mezzo e tratta, tutti da salvare nel database
+                    System.out.println("Mi dispiace per l'inconveniente ma il nostro sistema è attualmente in manutenzione e le tratte disponibili sono solo: ");
                     break;
                 case 2:
                     // Creazione di un abbonamento, stabilendo anche la tessera utente
