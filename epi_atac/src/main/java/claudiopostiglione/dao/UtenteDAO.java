@@ -34,18 +34,14 @@ public class UtenteDAO {
         }
     }
 
-    public Utente findUtenteByEmail(String email){
+    public Utente findUtenteByEmail(String email) {
         Utente found = em.find(Utente.class, email);
-        if(found==null) throw new emailUserNotFoundException(email);
+        if (found == null) throw new emailUserNotFoundException(email);
         return found;
     }
 
-    public long findNumeroUtenti(){
-        TypedQuery<Utente> query = em.createQuery("SELECT COUNT(ut) FROM Utente ut", Utente.class);
-        long found = query.getFirstResult();
-        if(found == 0){
-            System.out.println("Nessun utente creato");
-        }
-        return found;
+    public long findNumeroUtenti() {
+        TypedQuery<Long> query = em.createQuery("SELECT COUNT(*) FROM Utente ut", Long.class);
+        return query.getSingleResult();
     }
 }

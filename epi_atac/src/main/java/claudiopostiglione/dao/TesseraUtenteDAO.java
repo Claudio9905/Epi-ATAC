@@ -36,11 +36,10 @@ public class TesseraUtenteDAO {
     public void renewTessera(long id) {
         try {
             TesseraUtente tu = findTesseraUtenteById(id);
-            System.out.println(tu.isValido());
-            if (tu.isValido()) {
+            boolean valido = LocalDate.now().isBefore(tu.getDataScadenza());
+            if (valido) {
                 tu.setDataInizio(LocalDate.now());
                 tu.setDataScadenza(LocalDate.now().plusYears(1));
-                tu.setValido(true);
                 save(tu);
                 System.out.println("Tessera rinnovata!");
             } else System.out.println("La tessera è valida fino al " + tu.getDataScadenza());

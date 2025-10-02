@@ -60,7 +60,7 @@ public class Application {
             while (true) {
                 num = r.nextLong(1, uDao.findNumeroUtenti() + 1);
                 System.out.println(num);
-                if (!longUsciti.contains(num)) {
+                if (longUsciti.contains(num)) {
                     longUsciti.add(num);
                     break;
                 }
@@ -80,19 +80,21 @@ public class Application {
             ped.save(distributoreAutomaticoSupplier.get());
         }
 
-//        //Creazione oggetto NegozioRivenditore
-//        Supplier<NegozioRivenditore> negozioRivenditoreSupplier = () ->{
-//            return new NegozioRivenditore(f.address().cityName(),f.company().name(),LocalTime.of(9,9),LocalTime.of(18,0));
-//        };
-//
-//
-//        //Creazione oggetto abbonamento
+       //Creazione oggetto NegozioRivenditore
+      Supplier<NegozioRivenditore> negozioRivenditoreSupplier = () -> new NegozioRivenditore(f.address().cityName(),f.lordOfTheRings().character(),f.company().name(),LocalTime.of(9,9),LocalTime.of(18,0));
+        for(int i = 0; i < 10; i++){
+            ped.save(negozioRivenditoreSupplier.get());
+        }
+
+        //Creazione oggetto abbonamento
 //        Supplier<Abbonamento> abbonamentoSupplier = () -> {
 //
 //            String[] tipoAbbonamento = {"MENSILE", "SETTIMANALE"};
 //            TipoAbbonamento tipo = TipoAbbonamento.valueOf(tipoAbbonamento[r.nextInt(0,2)]);
 //
-//                return new Abbonamento(tipo, getRandomDate(LocalDate.of(2024,1,1), LocalDate.now()),)
+//            ped.
+//
+//            return new Abbonamento(tipo, getRandomDate(LocalDate.of(2024,1,1), LocalDate.now()),)
 //        };
 
 
@@ -117,7 +119,7 @@ public class Application {
 //        uDao.save(u6);
 //        uDao.save(u7);
 //
-        TesseraUtenteDAO tuDao = new TesseraUtenteDAO(em);
+ //        TesseraUtenteDAO tuDao = new TesseraUtenteDAO(em);
 //        TesseraUtente tu1 = new TesseraUtente(LocalDate.of(2020, 5, 18), u1);
 //        TesseraUtente tu2 = new TesseraUtente(LocalDate.of(2023, 10, 20), u2);
 //        TesseraUtente tu3 = new TesseraUtente(LocalDate.of(2025, 1, 20), u3);
@@ -166,7 +168,7 @@ public class Application {
 //        peDao.save(Distributore5);
 //
 //                LocalDate ld = LocalDate.of(r.nextInt(2023, 2026), r.nextInt(1, 13), r.nextInt(1, 32));
-        GestioneVenditaDAO gvDao = new GestioneVenditaDAO(em);
+//        GestioneVenditaDAO gvDao = new GestioneVenditaDAO(em);
 //        Biglietto b1 = new Biglietto(getRandomDate(LocalDate.now().minusYears(2), LocalDate.now()), Distributore4,TipoMezzo.AUTOBUS);
 //        Biglietto b2 = new Biglietto(getRandomDate(LocalDate.now().minusYears(2), LocalDate.now()), Distributore4,TipoMezzo.AUTOBUS);
 //        Biglietto b3 = new Biglietto(getRandomDate(LocalDate.now().minusYears(2), LocalDate.now()), Negozio1,TipoMezzo.AUTOBUS);
@@ -284,13 +286,13 @@ public class Application {
         }
 
 
-        System.out.println(isTheSubValid("b9b39507-1522-4da7-87ff-13ed178ceb3a", "10b72c5d-3767-4210-8cde-913ed88f4012", em));
+       // System.out.println(isTheSubValid("b9b39507-1522-4da7-87ff-13ed178ceb3a", "10b72c5d-3767-4210-8cde-913ed88f4012", em));
         //System.out.println(isTheSubValid("b9b39507-1522-4da7-87ff-13ed178ceb3a", "10b72c5d-3767-4210-8cde-913ed88f4012", em));
 
 //        obliteratiPerMezzo("33ace2d7-6ed5-4dba-94d8-5b5e7f77d130", em);
 
 //        gvDao.totalSoldTicketsInAPeriod(LocalDate.of(2023, 9, 18), LocalDate.of(2023, 9, 20));
-        tuDao.renewTessera(1);
+ //       tuDao.renewTessera(1);
     }
 
     public static LocalDate getRandomDate(LocalDate start, LocalDate end) {
