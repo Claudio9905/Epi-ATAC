@@ -1,5 +1,6 @@
 package claudiopostiglione.dao;
 
+import claudiopostiglione.entities.PuntoEmissione;
 import claudiopostiglione.entities.Tratta;
 import claudiopostiglione.exceptions.IdNotFoundException;
 import jakarta.persistence.EntityManager;

@@ -23,7 +23,7 @@ public abstract class GestioneVendita {
     protected PuntoEmissione puntoEmissione;
 
     @ManyToOne
-    @JoinColumn(name = "Mezzo")
+    @JoinColumn(name = "mezzo")
     protected Mezzo mezzoObliterazione;
 
     //Costruttori
