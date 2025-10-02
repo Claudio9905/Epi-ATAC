@@ -35,15 +35,15 @@ public class PuntoEmissioneDAO {
         }
     }
 
-    public List<UUID> findAllPuntoEmissione() {
+    public List<PuntoEmissione> findAllPuntoEmissione() {
         try {
-            TypedQuery<UUID> query = em.createQuery("SELECT pe.id FROM PuntoEmissione pe", UUID.class);
-            List<UUID> found = query.getResultList();
+            TypedQuery<PuntoEmissione> query = em.createQuery("SELECT pe FROM PuntoEmissione pe", PuntoEmissione.class);
+            List<PuntoEmissione> found = query.getResultList();
 
             // Stampa ogni UUID su una nuova riga
-            for (UUID id : found) {
-                System.out.println(id);
-            }
+//            for (PuntoEmissione id : found) {
+//                System.out.println(id);
+//            }
 
             return found;
         } catch (Exception e) {
