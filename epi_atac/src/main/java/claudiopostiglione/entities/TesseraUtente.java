@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.UUID;
 
 @Entity
 @Table(name = "Tessera_Utente")
@@ -13,8 +12,8 @@ public class TesseraUtente {
 
     //Attributi
     @Id
-    @GeneratedValue
-    private UUID Id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long Id;
     @Column(name = "Data_Inizio", nullable = false)
     private LocalDate dataInizio;
     @Column(name = "Data_Scadenza", nullable = false)
@@ -38,7 +37,7 @@ public class TesseraUtente {
     }
 
     //Metodi
-    public UUID getTesseraId() {
+    public long getTesseraId() {
         return Id;
     }
 

@@ -4,7 +4,6 @@ package claudiopostiglione.entities;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 @Entity
 @Table(name = "Utente")

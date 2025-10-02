@@ -9,9 +9,13 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Supplier;
 
@@ -111,23 +115,38 @@ public class Application {
 //        mDao.save(m5);
 //
 //        PuntoEmissioneDAO peDao = new PuntoEmissioneDAO(em);
-//        PuntoEmissione pe1 = new PuntoEmissione(TipoRivenditore.DISTRIBUTORE_AUTOMATICO, true);
-//        PuntoEmissione pe2 = new PuntoEmissione(TipoRivenditore.DISTRIBUTORE_AUTOMATICO, true);
-//        PuntoEmissione pe3 = new PuntoEmissione(TipoRivenditore.RIVENDITORE_AUTORIZZATO, true);
-//        PuntoEmissione pe4 = new PuntoEmissione(TipoRivenditore.DISTRIBUTORE_AUTOMATICO, false);
-//        peDao.save(pe1);
-//        peDao.save(pe2);
-//        peDao.save(pe3);
-//        peDao.save(pe4);
 //
-//        //        LocalDate ld = LocalDate.of(r.nextInt(2023, 2026), r.nextInt(1, 13), r.nextInt(1, 32));
-        GestioneVenditaDAO gvDao = new GestioneVenditaDAO(em);
-//        Biglietto b1 = new Biglietto(getRandomDate(LocalDate.now().minusYears(2), LocalDate.now()), pe1);
-//        Biglietto b2 = new Biglietto(getRandomDate(LocalDate.now().minusYears(2), LocalDate.now()), pe2);
-//        Biglietto b3 = new Biglietto(m2, getRandomDate(LocalDate.now().minusYears(2), LocalDate.now()), pe1);
-//        Biglietto b4 = new Biglietto(m2, getRandomDate(LocalDate.now().minusYears(2), LocalDate.now()), pe3);
-//        Biglietto b5 = new Biglietto(getRandomDate(LocalDate.now().minusYears(2), LocalDate.now()), pe1);
-//        Biglietto b6 = new Biglietto(m1, getRandomDate(LocalDate.now().minusYears(2), LocalDate.now()), pe4);
+//        NegozioRivenditore Negozio1 = new NegozioRivenditore("Napoli", "Claudio", "BigliettiMatti", LocalTime.of(8, 30), LocalTime.of(20, 30));
+//        NegozioRivenditore Negozio2 = new NegozioRivenditore("Padova", "Cristina", "BigliettiMatti", LocalTime.of(12, 30), LocalTime.of(18, 30));
+//        NegozioRivenditore Negozio3 = new NegozioRivenditore("Monte Compatri", "Mattia", "BigliettiMatti", LocalTime.of(8, 30), LocalTime.of(9, 30));
+//        NegozioRivenditore Negozio4 = new NegozioRivenditore("Pavia", "Thomas", "BigliettiMatti", LocalTime.of(11, 30), LocalTime.of(19, 30));
+//
+//        peDao.save(Negozio1);
+//        peDao.save(Negozio2);
+//        peDao.save(Negozio3);
+//        peDao.save(Negozio4);
+//
+//        DistributoreAutomatico Distributore1 = new DistributoreAutomatico("Napoli", false);
+//        DistributoreAutomatico Distributore2 = new DistributoreAutomatico("Padova", false);
+//        DistributoreAutomatico Distributore3 = new DistributoreAutomatico("Pavia", false);
+//        DistributoreAutomatico Distributore4 = new DistributoreAutomatico("Pavia di Udine", true);
+//        DistributoreAutomatico Distributore5 = new DistributoreAutomatico("Roma", false);
+//
+//        peDao.save(Distributore1);
+//        peDao.save(Distributore2);
+//        peDao.save(Distributore3);
+//        peDao.save(Distributore4);
+//        peDao.save(Distributore5);
+//
+//                LocalDate ld = LocalDate.of(r.nextInt(2023, 2026), r.nextInt(1, 13), r.nextInt(1, 32));
+//        GestioneVenditaDAO gvDao = new GestioneVenditaDAO(em);
+//        Biglietto b1 = new Biglietto(getRandomDate(LocalDate.now().minusYears(2), LocalDate.now()), Distributore4,TipoMezzo.AUTOBUS);
+//        Biglietto b2 = new Biglietto(getRandomDate(LocalDate.now().minusYears(2), LocalDate.now()), Distributore4,TipoMezzo.AUTOBUS);
+//        Biglietto b3 = new Biglietto(getRandomDate(LocalDate.now().minusYears(2), LocalDate.now()), Negozio1,TipoMezzo.AUTOBUS);
+//        Biglietto b4 = new Biglietto(getRandomDate(LocalDate.now().minusYears(2), LocalDate.now()), Negozio3, TipoMezzo.AUTOBUS);
+//        Biglietto b5 = new Biglietto(LocalDate.of(2024, 11, 23), Negozio2, getRandomDate(LocalDate.of(2024, 11, 23), LocalDate.now()),TipoMezzo.AUTOBUS, m2);
+//        Biglietto b6 = new Biglietto(LocalDate.of(2023, 11, 23), Negozio4, getRandomDate(LocalDate.of(2023, 11, 23), LocalDate.now()),TipoMezzo.TRAM, m1);
+//
 //        gvDao.save(b1);
 //        gvDao.save(b2);
 //        gvDao.save(b3);
@@ -135,12 +154,12 @@ public class Application {
 //        gvDao.save(b5);
 //        gvDao.save(b6);
 //
-//        Abbonamento a1 = new Abbonamento(TipoAbbonamento.MENSILE, LocalDate.of(2024, 6, 19), pe2, tu1);
-//        Abbonamento a2 = new Abbonamento(TipoAbbonamento.SETTIMANALE, LocalDate.of(2025, 10, 19), pe1, tu1);
-//        Abbonamento a3 = new Abbonamento(TipoAbbonamento.MENSILE, LocalDate.of(2024, 9, 19), pe4, tu2);
-//        Abbonamento a4 = new Abbonamento(TipoAbbonamento.MENSILE, LocalDate.of(2025, 9, 19), pe2, tu3);
-//        Abbonamento a5 = new Abbonamento(TipoAbbonamento.SETTIMANALE, LocalDate.of(2025, 5, 19), pe1, tu4);
-//        Abbonamento a6 = new Abbonamento(TipoAbbonamento.MENSILE, LocalDate.of(2025, 9, 29), pe3, tu5);
+//        Abbonamento a1 = new Abbonamento(TipoAbbonamento.MENSILE, LocalDate.of(2024, 6, 19), Distributore1, tu1, TipoMezzo.AUTOBUS);
+//        Abbonamento a2 = new Abbonamento(TipoAbbonamento.SETTIMANALE, LocalDate.of(2025, 10, 19), Distributore4, tu1, TipoMezzo.AUTOBUS);
+//        Abbonamento a3 = new Abbonamento(TipoAbbonamento.MENSILE, LocalDate.of(2024, 9, 19), Negozio1, tu2, TipoMezzo.TRAM);
+//        Abbonamento a4 = new Abbonamento(TipoAbbonamento.MENSILE, LocalDate.of(2025, 9, 19), Negozio2, tu3, TipoMezzo.TRAM);
+//        Abbonamento a5 = new Abbonamento(TipoAbbonamento.SETTIMANALE, LocalDate.of(2025, 5, 19), Distributore4, tu4, TipoMezzo.TRAM);
+//        Abbonamento a6 = new Abbonamento(TipoAbbonamento.MENSILE, LocalDate.of(2025, 9, 29), Negozio2, tu5, TipoMezzo.AUTOBUS);
 //        gvDao.save(a1);
 //        gvDao.save(a2);
 //        gvDao.save(a3);
@@ -163,11 +182,11 @@ public class Application {
 //        tDao.save(t6);
 //
 //        MezzoTrattaDAO mtDao = new MezzoTrattaDAO(em);
-//        MezzoTratta mt1 = new MezzoTratta(LocalTime.of(8, 20, 0), LocalTime.of(9,30, 0), t1, m2);
-//        MezzoTratta mt2 = new MezzoTratta(LocalTime.of(12, 30, 0), LocalTime.of(15,30, 0), t3, m4);
-//        MezzoTratta mt3 = new MezzoTratta(LocalTime.of(9, 36, 0), LocalTime.of(9,59, 0), t2, m3);
-//        MezzoTratta mt4 = new MezzoTratta(LocalTime.of(15, 20, 0), LocalTime.of(19,55, 0), t4, m1);
-//        MezzoTratta mt5 = new MezzoTratta(LocalTime.of(16, 20, 0), LocalTime.of(18,40, 0), t6, m2);
+//        MezzoTratta mt1 = new MezzoTratta(LocalTime.of(8, 20, 0), LocalTime.of(9, 30, 0), t1, m2);
+//        MezzoTratta mt2 = new MezzoTratta(LocalTime.of(12, 30, 0), LocalTime.of(15, 30, 0), t3, m4);
+//        MezzoTratta mt3 = new MezzoTratta(LocalTime.of(9, 36, 0), LocalTime.of(9, 59, 0), t2, m3);
+//        MezzoTratta mt4 = new MezzoTratta(LocalTime.of(15, 20, 0), LocalTime.of(19, 55, 0), t4, m1);
+//        MezzoTratta mt5 = new MezzoTratta(LocalTime.of(16, 20, 0), LocalTime.of(18, 40, 0), t6, m2);
 //        mtDao.save(mt1);
 //        mtDao.save(mt2);
 //        mtDao.save(mt3);
@@ -187,6 +206,8 @@ public class Application {
 //        smDao.save(sm4);
 //        smDao.save(sm5);
 //        smDao.save(sm6);
+
+
 //        System.out.println(gvDao.totalSoldTickcetsAndSubsInAPeriod(LocalDate.of(2026, 7, 20), LocalDate.of(2026,10, 31)));
 
 //        System.out.println(gvDao.totalSoldTicketsInSalePlace("25d38f55-1c5c-453c-9da6-a0ea24df1089"));
@@ -237,6 +258,10 @@ public class Application {
 
 
         System.out.println(isTheSubValid("b9b39507-1522-4da7-87ff-13ed178ceb3a", "10b72c5d-3767-4210-8cde-913ed88f4012", em));
+        //System.out.println(isTheSubValid("b9b39507-1522-4da7-87ff-13ed178ceb3a", "10b72c5d-3767-4210-8cde-913ed88f4012", em));
+
+        obliteratiPerMezzo("33ace2d7-6ed5-4dba-94d8-5b5e7f77d130", em);
+
     }
 
     public static LocalDate getRandomDate(LocalDate start, LocalDate end) {
@@ -280,23 +305,49 @@ public class Application {
         System.out.println("");
     }
 
+    
     public static boolean isTheSubValid(String idAbbonamento, String idTessera, EntityManager em) {
-        UUID idTesseraUuid = UUID.fromString(idTessera);
-        TesseraUtenteDAO tuDao = new TesseraUtenteDAO(em);
-        TesseraUtente tu = tuDao.findTesseraUtenteById(idTesseraUuid);
+        try {
+            UUID idTesseraUuid = UUID.fromString(idTessera);
+            TesseraUtenteDAO tuDao = new TesseraUtenteDAO(em);
+            TesseraUtente tu = tuDao.findTesseraUtenteById(idTesseraUuid);
 
-        UUID idAbbonamentoUuid = UUID.fromString(idAbbonamento);
+            UUID idAbbonamentoUuid = UUID.fromString(idAbbonamento);
 
-        List<Abbonamento> abbonamenti = tu.getAbbonamento();
-        Abbonamento abbCercato = abbonamenti.stream().filter(a ->
-                a.getId().equals(idAbbonamentoUuid)
-        ).toList().getFirst();
-        if (abbCercato.isValido()) {
-            System.out.println("L'abbonamento è valido!");
-        } else {
-            System.out.println("L'abbonamento non è valido");
+            List<Abbonamento> abbonamenti = tu.getAbbonamento();
+            Abbonamento abbCercato = abbonamenti.stream().filter(a ->
+                    a.getId().equals(idAbbonamentoUuid)
+            ).toList().getFirst();
+            if (abbCercato.getDataScadenza().isAfter(LocalDate.now())) {
+                System.out.println("L'abbonamento è valido!");
+            } else {
+                System.out.println("L'abbonamento non è valido");
+            }
+            return abbCercato.getDataScadenza().isAfter(LocalDate.now());
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            return false;
         }
-        return abbCercato.isValido();
+    }
+
+
+    public static int  obliteratiPerMezzo(String id, EntityManager em){
+        UUID mezzoid = UUID.fromString(id);
+
+        MezzoDAO mezzoOB =  new MezzoDAO(em);
+        Mezzo mezzo= mezzoOB.findMezzoById(mezzoid);
+        int numeroBigliettiTrovati = mezzo.getListaBiglietti().size();
+        if (mezzo.getListaBiglietti().size() == 0) {
+
+            System.out.println("Non trovati");
+            System.out.println("(╯°□°）╯︵ ┻━┻");
+        }else {
+            System.out.println("Trovati n: " + numeroBigliettiTrovati);
+            System.out.println("(✿◠‿◠)");
+        }
+
+
+        return mezzo.getListaBiglietti().size();
     }
 
 

@@ -24,8 +24,8 @@ public class Abbonamento extends GestioneVendita {
     public Abbonamento() {
     }
 
-    public Abbonamento(TipoAbbonamento tipo, LocalDate dataAcquisto, PuntoEmissione puntoEmissione, TesseraUtente tessera) {
-        super(dataAcquisto, puntoEmissione);
+    public Abbonamento(TipoAbbonamento tipo, LocalDate dataAcquisto, PuntoEmissione puntoEmissione, TesseraUtente tessera, TipoMezzo tipoMezzo) {
+        super(dataAcquisto, puntoEmissione, tipoMezzo);
         this.tipo = tipo;
         if (tipo.equals(TipoAbbonamento.MENSILE)) {
             this.dataScadenza = dataAcquisto.plusDays(30);

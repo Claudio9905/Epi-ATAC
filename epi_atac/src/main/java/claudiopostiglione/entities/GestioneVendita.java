@@ -17,21 +17,22 @@ public abstract class GestioneVendita {
     protected UUID id;
     @Column(name = "Data_Acquisto", nullable = false)
     protected LocalDate dataAcquisto;
-    @Column(name = "Valido", nullable = false)
-    protected boolean valido;
+
 
     @ManyToOne
     @JoinColumn(name = "punto_emissione", nullable = false)
     protected PuntoEmissione puntoEmissione;
 
+    protected TipoMezzo tipoMezzo;
+
     //Costruttori
     public GestioneVendita() {
     }
 
-    public GestioneVendita(LocalDate dataAcquisto, PuntoEmissione puntoEmissione) {
+    public GestioneVendita(LocalDate dataAcquisto, PuntoEmissione puntoEmissione, TipoMezzo tipoMezzo) {
         this.dataAcquisto = dataAcquisto;
         this.puntoEmissione = puntoEmissione;
-        this.valido = true;
+        this.tipoMezzo = tipoMezzo;
     }
 
 
@@ -48,13 +49,6 @@ public abstract class GestioneVendita {
         this.dataAcquisto = dataAcquisto;
     }
 
-    public boolean isValido() {
-        return valido;
-    }
-
-    public void setValido(boolean valido) {
-        this.valido = valido;
-    }
 
     public PuntoEmissione getPuntoEmissione() {
         return puntoEmissione;
@@ -67,9 +61,8 @@ public abstract class GestioneVendita {
     @Override
     public String toString() {
         return "|-- GestioneVendita:" +
-                " ID= " + id +
+                "ID= " + id +
                 ", Data acquisto= " + dataAcquisto +
-                ", Valido= " + valido +
                 ", Punto emissione= " + puntoEmissione +
                 " --|";
     }

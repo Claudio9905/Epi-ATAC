@@ -8,48 +8,45 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "Punto_di_Emissione")
-public class PuntoEmissione {
+@Inheritance(strategy = InheritanceType.JOINED)
+public abstract class PuntoEmissione {
 
     //Attributi
     @Id
     @GeneratedValue
-    private UUID Id;
-    @Column(name = "Tipo_Rivenditore", nullable = false)
-    private TipoRivenditore tipo;
-    @Column(name = "In_Servizio")
-    private boolean inServizio;
+    protected UUID Id;
+    @Column(name = "Posizione", nullable = false)
+    protected String Posizione;
 
     @OneToMany(mappedBy = "puntoEmissione")
-    private List<GestioneVendita> listaVendite;
+    protected List<GestioneVendita> listaVendite;
 
     //Costruttori
     public PuntoEmissione() {
     }
 
-    public PuntoEmissione(TipoRivenditore tipo, boolean inServizio) {
-        this.tipo = tipo;
-        this.inServizio = inServizio;
+    public PuntoEmissione( String posizione) {
+        Posizione = posizione;
+
     }
 
-    //Metodi
-    public UUID getPuntoEmissioneId() {
+//metodi
+
+
+    public UUID getId() {
         return Id;
     }
 
-    public TipoRivenditore getTipo() {
-        return tipo;
+    public void setId(UUID id) {
+        Id = id;
     }
 
-    public void setTipo(TipoRivenditore tipo) {
-        this.tipo = tipo;
+    public String getPosizione() {
+        return Posizione;
     }
 
-    public boolean isInServizio() {
-        return inServizio;
-    }
-
-    public void setInServizio(boolean inServizio) {
-        this.inServizio = inServizio;
+    public void setPosizione(String posizione) {
+        Posizione = posizione;
     }
 
     public List<GestioneVendita> getListaVendite() {
@@ -62,10 +59,10 @@ public class PuntoEmissione {
 
     @Override
     public String toString() {
-        return "|-- Punto di Emissione: " +
-                " ID punto emissione= " + Id +
-                ", Tipo= " + tipo +
-                ", In servizio= " + inServizio +
-                " --|";
+        return "PuntoEmissione{" +
+                "Id=" + Id +
+                ", Posizione='" + Posizione + '\'' +
+                ", listaVendite=" + listaVendite +
+                '}';
     }
 }

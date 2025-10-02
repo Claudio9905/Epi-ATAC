@@ -6,56 +6,48 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "Biglietto")
-public class Biglietto extends GestioneVendita{
+public class Biglietto extends GestioneVendita {
 
     //Attributi
-    @Column(name = "Obliterato", nullable = false)
-    private boolean obliterato;
+    @Column(name = "Data_Obliterazione")
+    private LocalDate DataObliterazione;
 
     @ManyToOne
     @JoinColumn(name = "Mezzo_di_Obliterazione")
     private Mezzo mezzoObliterazione;
 
     //Costruttori
-    public Biglietto(){}
-
-    public Biglietto(LocalDate dataAcquisto, PuntoEmissione puntoEmissione){
-        super(dataAcquisto, puntoEmissione);
-        this.obliterato = false;
+    public Biglietto() {
     }
 
-    public Biglietto(Mezzo mezzoObliterazione, LocalDate dataAcquisto, PuntoEmissione puntoEmissione){
-        super(dataAcquisto, puntoEmissione);
+    public Biglietto(LocalDate dataAcquisto, PuntoEmissione puntoEmissione, TipoMezzo mezzo) {
+        super(dataAcquisto, puntoEmissione, mezzo);
+    }
+
+    public Biglietto(LocalDate dataAcquisto, PuntoEmissione puntoEmissione, LocalDate dataObliterazione, TipoMezzo mezzo, Mezzo mezzoObliterazione) {
+        super(dataAcquisto, puntoEmissione, mezzo);
+        DataObliterazione = dataObliterazione;
         this.mezzoObliterazione = mezzoObliterazione;
-        this.obliterato = true;
     }
 
     //Metodi
-    public Mezzo getMezzoObliterazione() {
-        return mezzoObliterazione;
+
+    public LocalDate getDataObliterazione() {
+        return DataObliterazione;
     }
 
-    public void setMezzoObliterazione(Mezzo mezzoObliterazione) {
-        this.mezzoObliterazione = mezzoObliterazione;
-    }
-
-    public boolean isObliterato() {
-        return obliterato;
-    }
-
-    public void setObliterato(boolean obliterato) {
-        this.obliterato = obliterato;
+    public void setDataObliterazione(LocalDate dataObliterazione) {
+        DataObliterazione = dataObliterazione;
     }
 
     @Override
     public String toString() {
         return "|-- Biglietto: " +
-                ", ID= " + id +
+                "ID= " + id +
                 ", Punto emissione=" + puntoEmissione +
                 ", Data acquisto= " + dataAcquisto +
-                ", Mezzo di obliterazione= " + mezzoObliterazione +
-                ", Obliterato= " + obliterato +
-                ", Valido= " + valido +
+                ", Mezzo di obliterazione= " + tipoMezzo +
+                ", Obliterato= " + DataObliterazione +
                 " --|";
     }
 }
