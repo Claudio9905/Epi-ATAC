@@ -52,15 +52,14 @@ public class Application {
 
 
         //Creazione oggetto tesseraUtente
+        List<Long> longUsciti = new ArrayList<>();
         Supplier<TesseraUtente> tesseraUtenteSupplier = () -> {
             LocalDate dataTessera = getRandomDate(LocalDate.of(2015, 1, 1), LocalDate.now());
 
-            List<Long> longUsciti = new ArrayList<>();
             long num;
             while (true) {
                 num = r.nextLong(1, uDao.findNumeroUtenti() + 1);
-                System.out.println(num);
-                if (longUsciti.contains(num)) {
+                if (!longUsciti.contains(num)) {
                     longUsciti.add(num);
                     break;
                 }
@@ -74,15 +73,15 @@ public class Application {
         }
 
         //Creazione oggetto DistributoreAutomatico
-        Supplier<DistributoreAutomatico> distributoreAutomaticoSupplier = () -> new DistributoreAutomatico(f.address().cityName(),r.nextBoolean());
+        Supplier<DistributoreAutomatico> distributoreAutomaticoSupplier = () -> new DistributoreAutomatico(f.address().cityName(), r.nextBoolean());
 
-        for(int i = 0; i < 10; i++){
+        for (int i = 0; i < 10; i++) {
             ped.save(distributoreAutomaticoSupplier.get());
         }
 
-       //Creazione oggetto NegozioRivenditore
-      Supplier<NegozioRivenditore> negozioRivenditoreSupplier = () -> new NegozioRivenditore(f.address().cityName(),f.lordOfTheRings().character(),f.company().name(),LocalTime.of(9,9),LocalTime.of(18,0));
-        for(int i = 0; i < 10; i++){
+        //Creazione oggetto NegozioRivenditore
+        Supplier<NegozioRivenditore> negozioRivenditoreSupplier = () -> new NegozioRivenditore(f.address().cityName(), f.lordOfTheRings().character(), f.company().name(), LocalTime.of(9, 9), LocalTime.of(18, 0));
+        for (int i = 0; i < 10; i++) {
             ped.save(negozioRivenditoreSupplier.get());
         }
 
@@ -119,7 +118,7 @@ public class Application {
 //        uDao.save(u6);
 //        uDao.save(u7);
 //
- //        TesseraUtenteDAO tuDao = new TesseraUtenteDAO(em);
+        //        TesseraUtenteDAO tuDao = new TesseraUtenteDAO(em);
 //        TesseraUtente tu1 = new TesseraUtente(LocalDate.of(2020, 5, 18), u1);
 //        TesseraUtente tu2 = new TesseraUtente(LocalDate.of(2023, 10, 20), u2);
 //        TesseraUtente tu3 = new TesseraUtente(LocalDate.of(2025, 1, 20), u3);
@@ -261,13 +260,16 @@ public class Application {
         System.out.println("|");
         System.out.println("|--------------------------------");
 
-        System.out.println("|- Fase Login -|");
-        System.out.println("| Salve, benvenuto ad EPI-ATAC, prego, identificarsi come utente o amministratore: |--(1 Utente) / (2 Amministratore)--| ");
+        System.out.println("|- Login -|");
+        System.out.println("| Salve, benvenuto ad EPI-ATAC, prego, identificarsi come utente o amministratore: |--(1 Utente) / (2 Amministratore) / (0 EXIT) --| ");
         int scelta = Integer.parseInt(scanner.nextLine());
 
         switch (scelta) {
 
+            case 0:
+                break;
             case 1:
+                //Sezione utente
                 System.out.println("Sei già registrato? |--(1 - SI) / (2 - NO)--|");
                 scelta = Integer.parseInt(scanner.nextLine());
                 if (scelta == 1) {
@@ -283,16 +285,22 @@ public class Application {
                 } else {
                     //utenteNonRegistrato();
                 }
+                break;
+            case 2:
+                //Sezione amministratore
+                break;
+            default:
+                System.out.println("Attenzione, scelta non disponibile, prego riprovare");
         }
 
 
-       // System.out.println(isTheSubValid("b9b39507-1522-4da7-87ff-13ed178ceb3a", "10b72c5d-3767-4210-8cde-913ed88f4012", em));
+        // System.out.println(isTheSubValid("b9b39507-1522-4da7-87ff-13ed178ceb3a", "10b72c5d-3767-4210-8cde-913ed88f4012", em));
         //System.out.println(isTheSubValid("b9b39507-1522-4da7-87ff-13ed178ceb3a", "10b72c5d-3767-4210-8cde-913ed88f4012", em));
 
 //        obliteratiPerMezzo("33ace2d7-6ed5-4dba-94d8-5b5e7f77d130", em);
 
 //        gvDao.totalSoldTicketsInAPeriod(LocalDate.of(2023, 9, 18), LocalDate.of(2023, 9, 20));
- //       tuDao.renewTessera(1);
+        //       tuDao.renewTessera(1);
     }
 
     public static LocalDate getRandomDate(LocalDate start, LocalDate end) {
@@ -313,6 +321,7 @@ public class Application {
             System.out.println("|  - Acquista biglietto (1) ");
             System.out.println("|  - Acquistare abbonamento (2) ");
             System.out.println("|  - Usare abbonamento (3) ");
+            System.out.println("|  - EXIT (0) ");
             scelta = Integer.parseInt(scanner.nextLine());
 
             switch (scelta) {
@@ -336,8 +345,7 @@ public class Application {
         System.out.println("");
     }
 
-    
-    
+
     public static boolean isTheSubValid(String idAbbonamento, long idTessera, EntityManager em) {
         try {
             TesseraUtenteDAO tuDao = new TesseraUtenteDAO(em);
