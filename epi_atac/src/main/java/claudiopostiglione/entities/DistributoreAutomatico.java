@@ -34,11 +34,11 @@ public class DistributoreAutomatico extends PuntoEmissione {
 
     @Override
     public String toString() {
-        return "DistributoreAutomatico{" +
-                "Id=" + Id +
-                ", inServizio=" + inServizio +
-                ", Posizione=" + Posizione +
-                '}';
+        return "|-- Distributore Automatico:" +
+                " ID del distributore= " + Id +
+                ", In servizio= " + inServizio +
+                ", Posizione= " + Posizione +
+                " --|";
     }
 }
 

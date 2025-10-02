@@ -28,9 +28,11 @@ public class Application {
         Scanner scanner = new Scanner(System.in);
         Faker f = new Faker();
         Random r = new Random();
+
+        //Oggetti DAO per interaggire con il DB
         UtenteDAO uDao = new UtenteDAO(em);
         TesseraUtenteDAO td = new TesseraUtenteDAO(em);
-
+        PuntoEmissioneDAO ped = new PuntoEmissioneDAO(em);
 
         // Creazione oggetto Utente
         Supplier<Utente> utenteSupplier = () -> {
@@ -65,8 +67,27 @@ public class Application {
             td.save(tesseraUtenteSupplier.get());
         }
 
+        //Creazione oggetto DistributoreAutomatico
+        Supplier<DistributoreAutomatico> distributoreAutomaticoSupplier = () -> new DistributoreAutomatico(f.address().cityName(),r.nextBoolean());
 
-        //
+        for(int i = 0; i < 10; i++){
+            ped.save(distributoreAutomaticoSupplier.get());
+        }
+
+//        //Creazione oggetto NegozioRivenditore
+//        Supplier<NegozioRivenditore> negozioRivenditoreSupplier = () ->{
+//            return new NegozioRivenditore(f.address().cityName(),f.company().name(),LocalTime.of(9,9),LocalTime.of(18,0));
+//        };
+//
+//
+//        //Creazione oggetto abbonamento
+//        Supplier<Abbonamento> abbonamentoSupplier = () -> {
+//
+//            String[] tipoAbbonamento = {"MENSILE", "SETTIMANALE"};
+//            TipoAbbonamento tipo = TipoAbbonamento.valueOf(tipoAbbonamento[r.nextInt(0,2)]);
+//
+//                return new Abbonamento(tipo, getRandomDate(LocalDate.of(2024,1,1), LocalDate.now()),)
+//        };
 
 
         System.out.println("Connessione al database riuscita!");
