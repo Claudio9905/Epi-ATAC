@@ -18,21 +18,22 @@ public abstract class GestioneVendita {
     @Column(name = "Data_Acquisto", nullable = false)
     protected LocalDate dataAcquisto;
 
-
     @ManyToOne
     @JoinColumn(name = "punto_emissione", nullable = false)
     protected PuntoEmissione puntoEmissione;
 
-    protected TipoMezzo tipoMezzo;
+    @ManyToOne
+    @JoinColumn(name = "Mezzo")
+    protected Mezzo mezzoObliterazione;
 
     //Costruttori
     public GestioneVendita() {
     }
 
-    public GestioneVendita(LocalDate dataAcquisto, PuntoEmissione puntoEmissione, TipoMezzo tipoMezzo) {
+    public GestioneVendita(LocalDate dataAcquisto, PuntoEmissione puntoEmissione, Mezzo mezzoObliterazione) {
         this.dataAcquisto = dataAcquisto;
         this.puntoEmissione = puntoEmissione;
-        this.tipoMezzo = tipoMezzo;
+        this.mezzoObliterazione = mezzoObliterazione;
     }
 
 
@@ -49,6 +50,13 @@ public abstract class GestioneVendita {
         this.dataAcquisto = dataAcquisto;
     }
 
+    public Mezzo getMezzoObliterazione() {
+        return mezzoObliterazione;
+    }
+
+    public void setMezzoObliterazione(Mezzo mezzoObliterazione) {
+        this.mezzoObliterazione = mezzoObliterazione;
+    }
 
     public PuntoEmissione getPuntoEmissione() {
         return puntoEmissione;

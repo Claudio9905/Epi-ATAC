@@ -3,7 +3,6 @@ package claudiopostiglione;
 import claudiopostiglione.dao.*;
 import claudiopostiglione.entities.*;
 import claudiopostiglione.exceptions.emailUserNotFoundException;
-import claudiopostiglione.dao.GestioneVenditaDAO;
 import claudiopostiglione.dao.MezzoDAO;
 import claudiopostiglione.dao.TesseraUtenteDAO;
 import claudiopostiglione.entities.Abbonamento;
@@ -15,9 +14,7 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.List;
 import java.util.Random;
@@ -86,15 +83,22 @@ public class Application {
         }
 
         //Creazione oggetto abbonamento
-//        Supplier<Abbonamento> abbonamentoSupplier = () -> {
-//
-//            String[] tipoAbbonamento = {"MENSILE", "SETTIMANALE"};
-//            TipoAbbonamento tipo = TipoAbbonamento.valueOf(tipoAbbonamento[r.nextInt(0,2)]);
-//
-//            ped.
-//
-//            return new Abbonamento(tipo, getRandomDate(LocalDate.of(2024,1,1), LocalDate.now()),)
-//        };
+        Supplier<Abbonamento> abbonamentoSupplier = () -> {
+
+            String[] tipoAbbonamento = {"MENSILE", "SETTIMANALE"};
+            TipoAbbonamento tipo = TipoAbbonamento.valueOf(tipoAbbonamento[r.nextInt(0,2)]);
+
+
+
+            return new Abbonamento(tipo, getRandomDate(LocalDate.of(2024,1,1), LocalDate.now()),)
+        };
+
+
+        //Creazione oggetto Biglietto
+        Supplier<Biglietto> bigliettoSupplier = () ->{
+            return new Biglietto(getRandomDate(LocalDate.of(2024,1,1),LocalDate.of(2025,1,1)),)
+        };
+
 
 
         System.out.println("Connessione al database riuscita!");
@@ -375,15 +379,15 @@ public class Application {
 
         MezzoDAO mezzoOB = new MezzoDAO(em);
         Mezzo mezzo = mezzoOB.findMezzoById(mezzoid);
-        int numeroBigliettiTrovati = mezzo.getListaBiglietti().size();
-        if (mezzo.getListaBiglietti().isEmpty()) {
+        int numeroBigliettiTrovati = mezzo.getListaGestioneVendità().size();
+        if (mezzo.getListaGestioneVendità().isEmpty()) {
             System.out.println("Non trovati");
             System.out.println("(╯°□°）╯︵ ┻━┻");
         } else {
             System.out.println("Trovati n: " + numeroBigliettiTrovati);
             System.out.println("(✿◠‿◠)");
         }
-        return mezzo.getListaBiglietti().size();
+        return mezzo.getListaGestioneVendità().size();
     }
 
 

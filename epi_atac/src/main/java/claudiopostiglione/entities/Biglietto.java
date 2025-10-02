@@ -12,22 +12,13 @@ public class Biglietto extends GestioneVendita {
     @Column(name = "Data_Obliterazione")
     private LocalDate DataObliterazione;
 
-    @ManyToOne
-    @JoinColumn(name = "Mezzo_di_Obliterazione")
-    private Mezzo mezzoObliterazione;
-
     //Costruttori
     public Biglietto() {
     }
 
-    public Biglietto(LocalDate dataAcquisto, PuntoEmissione puntoEmissione, TipoMezzo mezzo) {
-        super(dataAcquisto, puntoEmissione, mezzo);
-    }
-
-    public Biglietto(LocalDate dataAcquisto, PuntoEmissione puntoEmissione, LocalDate dataObliterazione, TipoMezzo mezzo, Mezzo mezzoObliterazione) {
-        super(dataAcquisto, puntoEmissione, mezzo);
+    public Biglietto(LocalDate dataAcquisto, PuntoEmissione puntoEmissione, LocalDate dataObliterazione, Mezzo mezzoObliterazione) {
+        super(dataAcquisto, puntoEmissione, mezzoObliterazione);
         DataObliterazione = dataObliterazione;
-        this.mezzoObliterazione = mezzoObliterazione;
     }
 
     //Metodi
@@ -46,7 +37,7 @@ public class Biglietto extends GestioneVendita {
                 "ID= " + id +
                 ", Punto emissione=" + puntoEmissione +
                 ", Data acquisto= " + dataAcquisto +
-                ", Mezzo di obliterazione= " + tipoMezzo +
+                ", Mezzo di obliterazione= " + mezzoObliterazione +
                 ", Obliterato= " + DataObliterazione +
                 " --|";
     }
