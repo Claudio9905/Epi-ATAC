@@ -3,28 +3,17 @@ package claudiopostiglione;
 import claudiopostiglione.dao.*;
 import claudiopostiglione.entities.*;
 import claudiopostiglione.exceptions.IdNotFoundException;
-import claudiopostiglione.exceptions.emailUserNotFoundException;
-import claudiopostiglione.dao.GestioneVenditaDAO;
-import claudiopostiglione.dao.MezzoDAO;
-import claudiopostiglione.dao.TesseraUtenteDAO;
-import claudiopostiglione.entities.Abbonamento;
-import claudiopostiglione.entities.Mezzo;
-import claudiopostiglione.entities.TesseraUtente;
 import com.github.javafaker.Faker;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
 import java.util.List;
 import java.util.Random;
+import java.util.Scanner;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.function.Supplier;
 
 public class Application {
 
@@ -196,7 +185,7 @@ public class Application {
 //        gvDao.save(a5);
 //        gvDao.save(a6);
 //
-//        TrattaDAO tDao = new TrattaDAO(em);
+        TrattaDAO tDao = new TrattaDAO(em);
 //        Tratta t1 = new Tratta(r.nextInt(180), "Padova", "Verona");
 //        Tratta t2 = new Tratta(r.nextInt(180), "Bologna", "Ferrara");
 //        Tratta t3 = new Tratta(r.nextInt(180), "Roma centro", "Roma termini");
@@ -210,7 +199,7 @@ public class Application {
 //        tDao.save(t5);
 //        tDao.save(t6);
 //
-//        MezzoTrattaDAO mtDao = new MezzoTrattaDAO(em);
+        MezzoTrattaDAO mtDao = new MezzoTrattaDAO(em);
 //        MezzoTratta mt1 = new MezzoTratta(LocalTime.of(8, 20, 0), LocalTime.of(9, 30, 0), t1, m2);
 //        MezzoTratta mt2 = new MezzoTratta(LocalTime.of(12, 30, 0), LocalTime.of(15, 30, 0), t3, m4);
 //        MezzoTratta mt3 = new MezzoTratta(LocalTime.of(9, 36, 0), LocalTime.of(9, 59, 0), t2, m3);
@@ -253,32 +242,38 @@ public class Application {
         System.out.println("|- Sezione Tratte -|");
         System.out.println("|--------------------------------");
         System.out.println("|");
-        System.out.println("|");
-        System.out.println("|");
-        System.out.println("|");
-        System.out.println("|");
-        System.out.println("|");
+        List<MezzoTratta> listaMezzoTratte = mtDao.findAllMezzoTratte();
+        for (int i = 0; i < listaMezzoTratte.size(); i++) {
+            Tratta tratta = listaMezzoTratte.get(i).getTratta();
+            System.out.println("| " + i + " - Da " + tratta.getZonaPartenza() + " a " + tratta.getCapolinea() + " - Durata: " + tratta.getPercorrenzaPrevista() + " min");
+            System.out.println("|     Orario partenza: " + listaMezzoTratte.get(i).getOrarioPartenza());
+        }
+//        System.out.println("|");
+//        System.out.println("|");
+//        System.out.println("|");
+//        System.out.println("|");
+//        System.out.println("|");
         System.out.println("|");
         System.out.println("|--------------------------------");
 
         System.out.println("|- Login -|");
-        System.out.println("| Salve, benvenuto ad EPI-ATAC, prego, identificarsi come utente o amministratore: |--(1 Utente) / (2 Amministratore) / (0 EXIT) --| ");
-        int scelta = Integer.parseInt(scanner.nextLine());
+        System.out.println("| Salve, benvenuto ad EPI-ATAC, prego, identificarsi come utente o amministratore: |--(1 Utente) / (2 Amministratore) / ('q' EXIT) --| ");
+        String scelta = scanner.nextLine();
 
         switch (scelta) {
 
-            case 0:
+            case "q":
                 break;
-            case 1:
+            case "1":
                 //Sezione utente
                 System.out.println("Sei già registrato? |--(1 - SI) / (2 - NO)--|");
-                scelta = Integer.parseInt(scanner.nextLine());
-                if (scelta == 1) {
+                int secondScelta = Integer.parseInt(scanner.nextLine());
+                if (secondScelta == 1) {
                     try {
                         System.out.println("| Inserisci le credenziali: --( ID Utente )--");
                         String ID = scanner.nextLine();
                         Utente utenteFound = uDao.findUtenteById(Long.parseLong(ID));
-                        utenteRegistrato(utenteFound);
+                        utenteRegistrato(utenteFound, em);
                     } catch (IdNotFoundException er) {
                         System.out.println(er.getMessage());
                     }
@@ -287,7 +282,7 @@ public class Application {
                     //utenteNonRegistrato();
                 }
                 break;
-            case 2:
+            case "2":
                 //Sezione amministratore
                 break;
             default:
@@ -313,9 +308,16 @@ public class Application {
         return LocalDate.ofEpochDay(randomDay);
     }
 
-    public static void utenteRegistrato(Utente utente) {
+    public static void utenteRegistrato(Utente utente, EntityManager em) {
 
         Scanner scanner = new Scanner(System.in);
+        Random r = new Random();
+        GestioneVenditaDAO gvDao = new GestioneVenditaDAO(em);
+        MezzoTrattaDAO mtDao = new MezzoTrattaDAO(em);
+        MezzoDAO tDao = new MezzoDAO(em);
+        PuntoEmissioneDAO peDao = new PuntoEmissioneDAO(em);
+        TesseraUtente tu = utente.getTessera();
+
         int scelta;
 
         do {
@@ -326,14 +328,49 @@ public class Application {
             System.out.println("|  - Usare abbonamento (3) ");
             System.out.println("|  - EXIT (0) ");
             scelta = Integer.parseInt(scanner.nextLine());
+            List<PuntoEmissione> listaPE = peDao.findAllPuntoEmissione();
 
             switch (scelta) {
                 case 1:
                     // Bisogna creare un nuovo biglietto, con mezzo e tratta, tutti da salvare nel database
-                    System.out.println("Mi dispiace per l'inconveniente ma il nostro sistema è attualmente in manutenzione e le tratte disponibili sono solo: ");
+//                    System.out.println("Mi dispiace per l'inconveniente ma il nostro sistema è attualmente in manutenzione e le tratte disponibili sono solo: ");
+                    while (true) {
+                        System.out.println("Indica il numero della tratta che vuoi percorrere, indicando il numero scritto sul tabellone");
+                        int numTabellone = Integer.parseInt(scanner.nextLine());
+                        List<MezzoTratta> listaMezzoTratte = mtDao.findAllMezzoTratte();
+                        List<Mezzo> listaMezzo = tDao.findAllMezzo();
+                        if (numTabellone < 0 || numTabellone > listaMezzoTratte.size()) {
+                            System.out.println("Numero non valido, riprova");
+                        } else {
+                            gvDao.save(new Biglietto(LocalDate.now(), listaPE.get(r.nextInt(listaPE.size())), listaMezzo.get(numTabellone)));
+                            System.out.println("Biglietto comprato!");
+                            break;
+                        }
+                    }
                     break;
                 case 2:
                     // Creazione di un abbonamento, stabilendo anche la tessera utente
+                    
+                    System.out.println("Che tipo di abbonamento ti serve?");
+                    System.out.println("1 - Mensile");
+                    System.out.println("2 - Settimanale");
+                    while (true) {
+                        int tipoAbb = Integer.parseInt(scanner.nextLine());
+                        TipoAbbonamento tipo;
+                        if (tipoAbb == 2) {
+                            tipo = TipoAbbonamento.SETTIMANALE;
+                            gvDao.save(new Abbonamento(tipo, LocalDate.now(), listaPE.get(r.nextInt()), tu));
+                            System.out.println("Abbonamento settimanale salvato!");
+                            break;
+                        } else if (tipoAbb == 1) {
+                            tipo = TipoAbbonamento.MENSILE;
+                            gvDao.save(new Abbonamento(tipo, LocalDate.now(), listaPE.get(r.nextInt()), tu));
+                            System.out.println("Abbonamento mensile salvato!");
+                            break;
+                        } else {
+                            System.out.println("Numero non valido, riprova");
+                        }
+                    }
                     break;
                 case 3:
                     break;

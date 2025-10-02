@@ -4,7 +4,9 @@ import claudiopostiglione.entities.Mezzo;
 import claudiopostiglione.exceptions.IdNotFoundException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.TypedQuery;
 
+import java.util.List;
 import java.util.UUID;
 
 public class MezzoDAO {
@@ -27,6 +29,18 @@ public class MezzoDAO {
         try {
             Mezzo found = em.find(Mezzo.class, id);
             if (found == null) throw new IdNotFoundException(id);
+            return found;
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            return null;
+        }
+    }
+
+    public List<Mezzo> findAllMezzo() {
+        try {
+            TypedQuery<Mezzo> query = em.createQuery("SELECT pe FROM Mezzo pe", Mezzo.class);
+            List<Mezzo> found = query.getResultList();
+            if (found.isEmpty()) System.out.println("Non sono stati trovati mezzi.");
             return found;
         } catch (Exception e) {
             System.err.println(e.getMessage());

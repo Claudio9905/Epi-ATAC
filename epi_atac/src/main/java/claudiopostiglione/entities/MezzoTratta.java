@@ -2,7 +2,6 @@ package claudiopostiglione.entities;
 
 import jakarta.persistence.*;
 
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
@@ -59,6 +58,10 @@ public class MezzoTratta {
         this.percorrenzaEffettiva = percorrenzzaEffettiva;
     }
 
+    public void setPercorrenzaEffettiva(long percorrenzaEffettiva) {
+        this.percorrenzaEffettiva = percorrenzaEffettiva;
+    }
+
     public LocalTime getOrarioPartenza() {
         return orarioPartenza;
     }
@@ -73,6 +76,22 @@ public class MezzoTratta {
 
     public void setOrarioArrivo(LocalTime orarioArrivo) {
         this.orarioArrivo = orarioArrivo;
+    }
+
+    public Tratta getTratta() {
+        return tratta;
+    }
+
+    public void setTratta(Tratta tratta) {
+        this.tratta = tratta;
+    }
+
+    public Mezzo getMezzo() {
+        return mezzo;
+    }
+
+    public void setMezzo(Mezzo mezzo) {
+        this.mezzo = mezzo;
     }
 
     @Override

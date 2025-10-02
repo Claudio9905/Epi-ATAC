@@ -1,14 +1,13 @@
 package claudiopostiglione.dao;
 
-import claudiopostiglione.entities.Biglietto;
-import claudiopostiglione.entities.GestioneVendita;
-import claudiopostiglione.entities.PuntoEmissione;
+import claudiopostiglione.entities.*;
 import claudiopostiglione.exceptions.IdNotFoundException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.TypedQuery;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 public class GestioneVenditaDAO {
@@ -97,5 +96,12 @@ public class GestioneVenditaDAO {
             System.out.println("☞ﾟヮﾟ)☞");
         }
         return found;
+    }
+
+    public List<Abbonamento> findAbbonamentoByTessera(TesseraUtente tu) {
+        TypedQuery<Abbonamento> query = em.createQuery("SELECT a FROM Abbonamento a WHERE a.tessera = :tu AND a.dataScadenza ", Abbonamento.class);
+        query.setParameter("tu", tu);
+        List<Abbonamento> listAbb = query.getResultList();
+        if (listAbb.isEmpty()) System.out.println("Non sono stati trovati abbonamenti connessi a questa tesesra");
     }
 }
