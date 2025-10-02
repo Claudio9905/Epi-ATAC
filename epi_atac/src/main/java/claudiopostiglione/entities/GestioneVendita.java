@@ -42,7 +42,6 @@ public abstract class GestioneVendita {
     }
 
 
-
     //Metodi
     public UUID getId() {
         return id;

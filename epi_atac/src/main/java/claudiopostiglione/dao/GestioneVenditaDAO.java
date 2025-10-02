@@ -99,9 +99,15 @@ public class GestioneVenditaDAO {
     }
 
     public List<Abbonamento> findAbbonamentoByTessera(TesseraUtente tu) {
-        TypedQuery<Abbonamento> query = em.createQuery("SELECT a FROM Abbonamento a WHERE a.tessera = :tu AND a.dataScadenza ", Abbonamento.class);
-        query.setParameter("tu", tu);
-        List<Abbonamento> listAbb = query.getResultList();
-        if (listAbb.isEmpty()) System.out.println("Non sono stati trovati abbonamenti connessi a questa tesesra");
+        try {
+            TypedQuery<Abbonamento> query = em.createQuery("SELECT a FROM Abbonamento a WHERE a.tessera = :tu AND a.dataScadenza > CURRENT_DATE", Abbonamento.class);
+            query.setParameter("tu", tu);
+            List<Abbonamento> listAbb = query.getResultList();
+            if (listAbb.isEmpty()) System.out.println("Non sono stati trovati abbonamenti connessi a questa tessera");
+            return listAbb;
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            return null;
+        }
     }
 }
