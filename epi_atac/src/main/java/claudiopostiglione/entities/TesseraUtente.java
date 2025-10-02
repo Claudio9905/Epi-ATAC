@@ -34,7 +34,7 @@ public class TesseraUtente {
     public TesseraUtente(LocalDate dataInizio, Utente utente) {
         this.dataInizio = dataInizio;
         this.dataScadenza = dataInizio.plusYears(1);
-        this.valido = LocalDate.now().isAfter(dataScadenza);
+        this.valido = LocalDate.now().isBefore(this.dataScadenza);
         this.utente = utente;
     }
 

@@ -1,15 +1,17 @@
 package claudiopostiglione;
 
-import claudiopostiglione.dao.*;
-import claudiopostiglione.entities.*;
+import claudiopostiglione.dao.GestioneVenditaDAO;
+import claudiopostiglione.dao.MezzoDAO;
+import claudiopostiglione.dao.TesseraUtenteDAO;
+import claudiopostiglione.entities.Abbonamento;
+import claudiopostiglione.entities.Mezzo;
+import claudiopostiglione.entities.TesseraUtente;
 import com.github.javafaker.Faker;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -44,7 +46,7 @@ public class Application {
 //        uDao.save(u6);
 //        uDao.save(u7);
 //
-//        TesseraUtenteDAO tuDao = new TesseraUtenteDAO(em);
+        TesseraUtenteDAO tuDao = new TesseraUtenteDAO(em);
 //        TesseraUtente tu1 = new TesseraUtente(LocalDate.of(2020, 5, 18), u1);
 //        TesseraUtente tu2 = new TesseraUtente(LocalDate.of(2023, 10, 20), u2);
 //        TesseraUtente tu3 = new TesseraUtente(LocalDate.of(2025, 1, 20), u3);
@@ -93,7 +95,7 @@ public class Application {
 //        peDao.save(Distributore5);
 //
 //                LocalDate ld = LocalDate.of(r.nextInt(2023, 2026), r.nextInt(1, 13), r.nextInt(1, 32));
-//        GestioneVenditaDAO gvDao = new GestioneVenditaDAO(em);
+        GestioneVenditaDAO gvDao = new GestioneVenditaDAO(em);
 //        Biglietto b1 = new Biglietto(getRandomDate(LocalDate.now().minusYears(2), LocalDate.now()), Distributore4,TipoMezzo.AUTOBUS);
 //        Biglietto b2 = new Biglietto(getRandomDate(LocalDate.now().minusYears(2), LocalDate.now()), Distributore4,TipoMezzo.AUTOBUS);
 //        Biglietto b3 = new Biglietto(getRandomDate(LocalDate.now().minusYears(2), LocalDate.now()), Negozio1,TipoMezzo.AUTOBUS);
@@ -168,8 +170,10 @@ public class Application {
 
         //System.out.println(isTheSubValid("b9b39507-1522-4da7-87ff-13ed178ceb3a", "10b72c5d-3767-4210-8cde-913ed88f4012", em));
 
-        obliteratiPerMezzo("33ace2d7-6ed5-4dba-94d8-5b5e7f77d130", em);
+//        obliteratiPerMezzo("33ace2d7-6ed5-4dba-94d8-5b5e7f77d130", em);
 
+//        gvDao.totalSoldTicketsInAPeriod(LocalDate.of(2023, 9, 18), LocalDate.of(2023, 9, 20));
+        tuDao.renewTessera(1);
     }
 
     public static LocalDate getRandomDate(LocalDate start, LocalDate end) {
@@ -179,11 +183,10 @@ public class Application {
         return LocalDate.ofEpochDay(randomDay);
     }
 
-    public static boolean isTheSubValid(String idAbbonamento, String idTessera, EntityManager em) {
+    public static boolean isTheSubValid(String idAbbonamento, long idTessera, EntityManager em) {
         try {
-            UUID idTesseraUuid = UUID.fromString(idTessera);
             TesseraUtenteDAO tuDao = new TesseraUtenteDAO(em);
-            TesseraUtente tu = tuDao.findTesseraUtenteById(idTesseraUuid);
+            TesseraUtente tu = tuDao.findTesseraUtenteById(idTessera);
 
             UUID idAbbonamentoUuid = UUID.fromString(idAbbonamento);
 
@@ -204,22 +207,19 @@ public class Application {
     }
 
 
-    public static int  obliteratiPerMezzo(String id, EntityManager em){
+    public static int obliteratiPerMezzo(String id, EntityManager em) {
         UUID mezzoid = UUID.fromString(id);
 
-        MezzoDAO mezzoOB =  new MezzoDAO(em);
-        Mezzo mezzo= mezzoOB.findMezzoById(mezzoid);
+        MezzoDAO mezzoOB = new MezzoDAO(em);
+        Mezzo mezzo = mezzoOB.findMezzoById(mezzoid);
         int numeroBigliettiTrovati = mezzo.getListaBiglietti().size();
-        if (mezzo.getListaBiglietti().size() == 0) {
-
+        if (mezzo.getListaBiglietti().isEmpty()) {
             System.out.println("Non trovati");
             System.out.println("(╯°□°）╯︵ ┻━┻");
-        }else {
+        } else {
             System.out.println("Trovati n: " + numeroBigliettiTrovati);
             System.out.println("(✿◠‿◠)");
         }
-
-
         return mezzo.getListaBiglietti().size();
     }
 

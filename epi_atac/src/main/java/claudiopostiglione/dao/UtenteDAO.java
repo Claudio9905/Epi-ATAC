@@ -22,8 +22,13 @@ public class UtenteDAO {
     }
 
     public Utente findUtenteById(long id) {
-        Utente found = em.find(Utente.class, id);
-        if (found == null) throw new IdNotFoundException(id);
-        return found;
+        try {
+            Utente found = em.find(Utente.class, id);
+            if (found == null) throw new IdNotFoundException(id);
+            return found;
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            return null;
+        }
     }
 }
