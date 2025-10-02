@@ -38,49 +38,49 @@ public class Application {
         PuntoEmissioneDAO ped = new PuntoEmissioneDAO(em);
 
         // Creazione oggetto Utente
-        Supplier<Utente> utenteSupplier = () -> {
-            boolean rdnBoolean = r.nextBoolean();
-            return new Utente(f.name().firstName(), f.name().lastName(), f.internet().emailAddress(), getRandomDate(LocalDate.of(1945, 1, 1), LocalDate.now()), rdnBoolean);
-        };
-
-        for (int i = 0; i < 10; i++) {
-            uDao.save(utenteSupplier.get());
-        }
-
-
-        //Creazione oggetto tesseraUtente
-        List<Long> longUsciti = new ArrayList<>();
-        Supplier<TesseraUtente> tesseraUtenteSupplier = () -> {
-            LocalDate dataTessera = getRandomDate(LocalDate.of(2015, 1, 1), LocalDate.now());
-
-            long num;
-            while (true) {
-                num = r.nextLong(1, uDao.findNumeroUtenti() + 1);
-                if (!longUsciti.contains(num)) {
-                    longUsciti.add(num);
-                    break;
-                }
-            }
-
-            return new TesseraUtente(dataTessera, uDao.findUtenteById(num));
-        };
-
-        for (int i = 0; i < uDao.findNumeroUtenti(); i++) {
-            td.save(tesseraUtenteSupplier.get());
-        }
-
-        //Creazione oggetto DistributoreAutomatico
-        Supplier<DistributoreAutomatico> distributoreAutomaticoSupplier = () -> new DistributoreAutomatico(f.address().cityName(), r.nextBoolean());
-
-        for (int i = 0; i < 10; i++) {
-            ped.save(distributoreAutomaticoSupplier.get());
-        }
-
-        //Creazione oggetto NegozioRivenditore
-        Supplier<NegozioRivenditore> negozioRivenditoreSupplier = () -> new NegozioRivenditore(f.address().cityName(), f.lordOfTheRings().character(), f.company().name(), LocalTime.of(9, 9), LocalTime.of(18, 0));
-        for (int i = 0; i < 10; i++) {
-            ped.save(negozioRivenditoreSupplier.get());
-        }
+//        Supplier<Utente> utenteSupplier = () -> {
+//            boolean rdnBoolean = r.nextBoolean();
+//            return new Utente(f.name().firstName(), f.name().lastName(), f.internet().emailAddress(), getRandomDate(LocalDate.of(1945, 1, 1), LocalDate.now()), rdnBoolean);
+//        };
+//
+//        for (int i = 0; i < 10; i++) {
+//            uDao.save(utenteSupplier.get());
+//        }
+//
+//
+//        //Creazione oggetto tesseraUtente
+//        List<Long> longUsciti = new ArrayList<>();
+//        Supplier<TesseraUtente> tesseraUtenteSupplier = () -> {
+//            LocalDate dataTessera = getRandomDate(LocalDate.of(2015, 1, 1), LocalDate.now());
+//
+//            long num;
+//            while (true) {
+//                num = r.nextLong(1, uDao.findNumeroUtenti() + 1);
+//                if (!longUsciti.contains(num)) {
+//                    longUsciti.add(num);
+//                    break;
+//                }
+//            }
+//
+//            return new TesseraUtente(dataTessera, uDao.findUtenteById(num));
+//        };
+//
+//        for (int i = 0; i < uDao.findNumeroUtenti(); i++) {
+//            td.save(tesseraUtenteSupplier.get());
+//        }
+//
+//        //Creazione oggetto DistributoreAutomatico
+//        Supplier<DistributoreAutomatico> distributoreAutomaticoSupplier = () -> new DistributoreAutomatico(f.address().cityName(), r.nextBoolean());
+//
+//        for (int i = 0; i < 10; i++) {
+//            ped.save(distributoreAutomaticoSupplier.get());
+//        }
+//
+//        //Creazione oggetto NegozioRivenditore
+//        Supplier<NegozioRivenditore> negozioRivenditoreSupplier = () -> new NegozioRivenditore(f.address().cityName(), f.lordOfTheRings().character(), f.company().name(), LocalTime.of(9, 9), LocalTime.of(18, 0));
+//        for (int i = 0; i < 10; i++) {
+//            ped.save(negozioRivenditoreSupplier.get());
+//        }
 
         //Creazione oggetto abbonamento
         Supplier<Abbonamento> abbonamentoSupplier = () -> {
@@ -146,7 +146,7 @@ public class Application {
 //        mDao.save(m4);
 //        mDao.save(m5);
 //
-//        PuntoEmissioneDAO peDao = new PuntoEmissioneDAO(em);
+        PuntoEmissioneDAO peDao = new PuntoEmissioneDAO(em);
 //
 //        NegozioRivenditore Negozio1 = new NegozioRivenditore("Napoli", "Claudio", "BigliettiMatti", LocalTime.of(8, 30), LocalTime.of(20, 30));
 //        NegozioRivenditore Negozio2 = new NegozioRivenditore("Padova", "Cristina", "BigliettiMatti", LocalTime.of(12, 30), LocalTime.of(18, 30));
@@ -247,55 +247,55 @@ public class Application {
 
         //-----------------------------------------------------------------------------------------------------------
 
-        System.out.println("|---               |----------|                                 |------------------------------------|                              ---|");
-        System.out.println("||---------------- | EPI-ATAC | --------------------------------||Home|| / ||About Us|| / ||Services|| /------------------------------||");
-        System.out.println("|---               |----------|                                 |------------------------------------|                              ---|");
-        System.out.println("\n");
-
-        // Qui verranno mostrate le tratte disponibili
-        System.out.println("|- Sezione Tratte -|");
-        System.out.println("|--------------------------------");
-        System.out.println("|");
-        System.out.println("|");
-        System.out.println("|");
-        System.out.println("|");
-        System.out.println("|");
-        System.out.println("|");
-        System.out.println("|");
-        System.out.println("|--------------------------------");
-
-        System.out.println("|- Login -|");
-        System.out.println("| Salve, benvenuto ad EPI-ATAC, prego, identificarsi come utente o amministratore: |--(1 Utente) / (2 Amministratore) / (0 EXIT) --| ");
-        int scelta = Integer.parseInt(scanner.nextLine());
-
-        switch (scelta) {
-
-            case 0:
-                break;
-            case 1:
-                //Sezione utente
-                System.out.println("Sei già registrato? |--(1 - SI) / (2 - NO)--|");
-                scelta = Integer.parseInt(scanner.nextLine());
-                if (scelta == 1) {
-                    try {
-                        System.out.println("| Inserisci le credenziali: --( E-mail )--");
-                        String emailUtente = scanner.nextLine();
-                        Utente utenteFound = uDao.findUtenteByEmail(emailUtente);
-                        utenteRegistrato(utenteFound);
-                    } catch (emailUserNotFoundException er) {
-                        System.out.println(er.getMessage());
-                    }
-
-                } else {
-                    //utenteNonRegistrato();
-                }
-                break;
-            case 2:
-                //Sezione amministratore
-                break;
-            default:
-                System.out.println("Attenzione, scelta non disponibile, prego riprovare");
-        }
+//        System.out.println("|---               |----------|                                 |------------------------------------|                              ---|");
+//        System.out.println("||---------------- | EPI-ATAC | --------------------------------||Home|| / ||About Us|| / ||Services|| /------------------------------||");
+//        System.out.println("|---               |----------|                                 |------------------------------------|                              ---|");
+//        System.out.println("\n");
+//
+//        // Qui verranno mostrate le tratte disponibili
+//        System.out.println("|- Sezione Tratte -|");
+//        System.out.println("|--------------------------------");
+//        System.out.println("|");
+//        System.out.println("|");
+//        System.out.println("|");
+//        System.out.println("|");
+//        System.out.println("|");
+//        System.out.println("|");
+//        System.out.println("|");
+//        System.out.println("|--------------------------------");
+//
+//        System.out.println("|- Login -|");
+//        System.out.println("| Salve, benvenuto ad EPI-ATAC, prego, identificarsi come utente o amministratore: |--(1 Utente) / (2 Amministratore) / (0 EXIT) --| ");
+//        int scelta = Integer.parseInt(scanner.nextLine());
+//
+//        switch (scelta) {
+//
+//            case 0:
+//                break;
+//            case 1:
+//                //Sezione utente
+//                System.out.println("Sei già registrato? |--(1 - SI) / (2 - NO)--|");
+//                scelta = Integer.parseInt(scanner.nextLine());
+//                if (scelta == 1) {
+//                    try {
+//                        System.out.println("| Inserisci le credenziali: --( E-mail )--");
+//                        String emailUtente = scanner.nextLine();
+//                        Utente utenteFound = uDao.findUtenteByEmail(emailUtente);
+//                        utenteRegistrato(utenteFound);
+//                    } catch (emailUserNotFoundException er) {
+//                        System.out.println(er.getMessage());
+//                    }
+//
+//                } else {
+//                    //utenteNonRegistrato();
+//                }
+//                break;
+//            case 2:
+//                //Sezione amministratore
+//                break;
+//            default:
+//                System.out.println("Attenzione, scelta non disponibile, prego riprovare");
+//        }
 
 
         // System.out.println(isTheSubValid("b9b39507-1522-4da7-87ff-13ed178ceb3a", "10b72c5d-3767-4210-8cde-913ed88f4012", em));
@@ -305,6 +305,8 @@ public class Application {
 
 //        gvDao.totalSoldTicketsInAPeriod(LocalDate.of(2023, 9, 18), LocalDate.of(2023, 9, 20));
         //       tuDao.renewTessera(1);
+
+        peDao.findAllPuntoEmissione();
     }
 
     public static LocalDate getRandomDate(LocalDate start, LocalDate end) {

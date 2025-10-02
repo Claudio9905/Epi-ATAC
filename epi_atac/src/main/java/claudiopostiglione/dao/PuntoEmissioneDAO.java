@@ -4,7 +4,9 @@ import claudiopostiglione.entities.PuntoEmissione;
 import claudiopostiglione.exceptions.IdNotFoundException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.TypedQuery;
 
+import java.util.List;
 import java.util.UUID;
 
 public class PuntoEmissioneDAO {
@@ -32,4 +34,22 @@ public class PuntoEmissioneDAO {
             return null;
         }
     }
+
+    public List<UUID> findAllPuntoEmissione() {
+        try {
+            TypedQuery<UUID> query = em.createQuery("SELECT pe.id FROM PuntoEmissione pe", UUID.class);
+            List<UUID> found = query.getResultList();
+
+            // Stampa ogni UUID su una nuova riga
+            for (UUID id : found) {
+                System.out.println(id);
+            }
+
+            return found;
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            return null;
+        }
+    }
+
 }
