@@ -3,12 +3,20 @@ package claudiopostiglione;
 import claudiopostiglione.dao.*;
 import claudiopostiglione.entities.*;
 import claudiopostiglione.exceptions.IdNotFoundException;
+import claudiopostiglione.exceptions.emailUserNotFoundException;
+import claudiopostiglione.dao.MezzoDAO;
+import claudiopostiglione.dao.TesseraUtenteDAO;
+import claudiopostiglione.entities.Abbonamento;
+import claudiopostiglione.entities.Mezzo;
+import claudiopostiglione.entities.TesseraUtente;
 import com.github.javafaker.Faker;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.*;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
@@ -29,62 +37,110 @@ public class Application {
         UtenteDAO uDao = new UtenteDAO(em);
         TesseraUtenteDAO td = new TesseraUtenteDAO(em);
         PuntoEmissioneDAO ped = new PuntoEmissioneDAO(em);
+        GestioneVenditaDAO gd = new GestioneVenditaDAO(em);
+        MezzoDAO md = new MezzoDAO(em);
 
         // Creazione oggetto Utente
-//        Supplier<Utente> utenteSupplier = () -> {
-//            boolean rdnBoolean = r.nextBoolean();
-//            return new Utente(f.name().firstName(), f.name().lastName(), f.internet().emailAddress(), getRandomDate(LocalDate.of(1945, 1, 1), LocalDate.now()), rdnBoolean);
-//        };
-//
-//        for (int i = 0; i < 10; i++) {
-//            uDao.save(utenteSupplier.get());
-//        }
-//
-//
-//        //Creazione oggetto tesseraUtente
-//        List<Long> longUsciti = new ArrayList<>();
-//        Supplier<TesseraUtente> tesseraUtenteSupplier = () -> {
-//            LocalDate dataTessera = getRandomDate(LocalDate.of(2015, 1, 1), LocalDate.now());
-//
-//            long num;
-//            while (true) {
-//                num = r.nextLong(1, uDao.findNumeroUtenti() + 1);
-//                if (!longUsciti.contains(num)) {
-//                    longUsciti.add(num);
-//                    break;
-//                }
-//            }
-//
-//            return new TesseraUtente(dataTessera, uDao.findUtenteById(num));
-//        };
-//
-//        for (int i = 0; i < uDao.findNumeroUtenti(); i++) {
-//            td.save(tesseraUtenteSupplier.get());
-//        }
-//
-//        //Creazione oggetto DistributoreAutomatico
-//        Supplier<DistributoreAutomatico> distributoreAutomaticoSupplier = () -> new DistributoreAutomatico(f.address().cityName(), r.nextBoolean());
-//
-//        for (int i = 0; i < 10; i++) {
-//            ped.save(distributoreAutomaticoSupplier.get());
-//        }
-//
-//        //Creazione oggetto NegozioRivenditore
-//        Supplier<NegozioRivenditore> negozioRivenditoreSupplier = () -> new NegozioRivenditore(f.address().cityName(), f.lordOfTheRings().character(), f.company().name(), LocalTime.of(9, 9), LocalTime.of(18, 0));
-//        for (int i = 0; i < 10; i++) {
-//            ped.save(negozioRivenditoreSupplier.get());
-//        }
+        Supplier<Utente> utenteSupplier = () -> {
+            boolean rdnBoolean = r.nextBoolean();
+            return new Utente(f.name().firstName(), f.name().lastName(), f.internet().emailAddress(), getRandomDate(LocalDate.of(1945, 1, 1), LocalDate.now()), rdnBoolean);
+        };
+
+        for (int i = 0; i < 20; i++) {
+            uDao.save(utenteSupplier.get());
+        }
+
+
+        //Creazione oggetto tesseraUtente
+        List<Long> longUsciti = new ArrayList<>();
+        Supplier<TesseraUtente> tesseraUtenteSupplier = () -> {
+            LocalDate dataTessera = getRandomDate(LocalDate.of(2015, 1, 1), LocalDate.now());
+
+            long num;
+            while (true) {
+                num = r.nextLong(1, uDao.findNumeroUtenti() + 1);
+                if (!longUsciti.contains(num)) {
+                    longUsciti.add(num);
+                    break;
+                }
+            }
+
+            return new TesseraUtente(dataTessera, uDao.findUtenteById(num));
+        };
+
+        for (int i = 0; i < uDao.findNumeroUtenti(); i++) {
+            td.save(tesseraUtenteSupplier.get());
+        }
+
+        //Creazione oggetto Mezzo
+        Supplier<Mezzo> mezzoSupplier = () ->{
+
+            String[] tipoMezzo = {"TRAM","AUTOBUS"};
+            TipoMezzo mezzo = TipoMezzo.valueOf(tipoMezzo[r.nextInt(0,2)]);
+
+            return new Mezzo(mezzo,r.nextInt(0,95));
+        };
+
+        for(int i = 0; i < 20; i++){
+            md.save(mezzoSupplier.get());
+        }
+
+        //Creazione oggetto DistributoreAutomatico
+        Supplier<DistributoreAutomatico> distributoreAutomaticoSupplier = () -> new DistributoreAutomatico(f.address().cityName(), r.nextBoolean());
+
+        for (int i = 0; i < 10; i++) {
+            ped.save(distributoreAutomaticoSupplier.get());
+        }
+
+        //Creazione oggetto NegozioRivenditore
+        Supplier<NegozioRivenditore> negozioRivenditoreSupplier = () -> new NegozioRivenditore(f.address().cityName(), f.lordOfTheRings().character(), f.company().name(), LocalTime.of(9, 9), LocalTime.of(18, 0));
+        for (int i = 0; i < 10; i++) {
+            ped.save(negozioRivenditoreSupplier.get());
+        }
+
+        //Creazione oggetto Biglietto
+        Supplier<Biglietto> bigliettoSupplier = () -> {
+
+            List<Mezzo> listaMezzo = md.findAllMezzo();
+            Mezzo mezzo = listaMezzo.get(r.nextInt(0,listaMezzo.size()));
+
+            List<PuntoEmissione> listaPuntiEmissione = ped.findAllPuntoEmissione();
+            PuntoEmissione punto = listaPuntiEmissione.get(r.nextInt(0,listaPuntiEmissione.size()));
+
+            boolean rdmBoolean = r.nextBoolean();
+
+            LocalDate dataAcquisto = getRandomDate(LocalDate.of(2024, 1, 1), LocalDate.of(2025, 1, 1));
+
+            if(rdmBoolean){
+            return new Biglietto(dataAcquisto,punto,dataAcquisto.plusDays(r.nextLong(0,5)),mezzo);
+            } else {
+                return new Biglietto(getRandomDate(LocalDate.of(2024, 1, 1), LocalDate.of(2025, 1, 1)),punto,mezzo);
+            }
+
+        };
+
+        for(int i = 0; i< 20; i++){
+            gd.save(bigliettoSupplier.get());
+        }
 
         //Creazione oggetto abbonamento
-//        Supplier<Abbonamento> abbonamentoSupplier = () -> {
-//
-//            String[] tipoAbbonamento = {"MENSILE", "SETTIMANALE"};
-//            TipoAbbonamento tipo = TipoAbbonamento.valueOf(tipoAbbonamento[r.nextInt(0,2)]);
-//
-//            ped.
-//
-//            return new Abbonamento(tipo, getRandomDate(LocalDate.of(2024,1,1), LocalDate.now()),)
-//        };
+        Supplier<Abbonamento> abbonamentoSupplier = () -> {
+
+            String[] tipoAbbonamento = {"MENSILE", "SETTIMANALE"};
+            TipoAbbonamento tipo = TipoAbbonamento.valueOf(tipoAbbonamento[r.nextInt(0,2)]);
+
+            List<PuntoEmissione> listaPuntiEmissione = ped.findAllPuntoEmissione();
+            PuntoEmissione punto = listaPuntiEmissione.get(r.nextInt(0,listaPuntiEmissione.size()));
+
+            List<TesseraUtente> listaTesseraUtente = td.findAllTesseraUtente();
+            TesseraUtente tessera = listaTesseraUtente.get(r.nextInt(0,listaTesseraUtente.size()));
+
+            return new Abbonamento(tipo, getRandomDate(LocalDate.of(2024,1,1), LocalDate.now()), punto,tessera);
+        };
+
+        for(int i = 0; i < 20; i++){
+            gd.save(abbonamentoSupplier.get());
+        }
 
 
         System.out.println("Connessione al database riuscita!");
@@ -132,7 +188,7 @@ public class Application {
 //        mDao.save(m4);
 //        mDao.save(m5);
 //
-        PuntoEmissioneDAO peDao = new PuntoEmissioneDAO(em);
+
 //
 //        NegozioRivenditore Negozio1 = new NegozioRivenditore("Napoli", "Claudio", "BigliettiMatti", LocalTime.of(8, 30), LocalTime.of(20, 30));
 //        NegozioRivenditore Negozio2 = new NegozioRivenditore("Padova", "Cristina", "BigliettiMatti", LocalTime.of(12, 30), LocalTime.of(18, 30));
@@ -298,7 +354,7 @@ public class Application {
 //        gvDao.totalSoldTicketsInAPeriod(LocalDate.of(2023, 9, 18), LocalDate.of(2023, 9, 20));
         //       tuDao.renewTessera(1);
 
-        peDao.findAllPuntoEmissione();
+        //peDao.findAllPuntoEmissione();
     }
 
     public static LocalDate getRandomDate(LocalDate start, LocalDate end) {
@@ -416,15 +472,15 @@ public class Application {
 
         MezzoDAO mezzoOB = new MezzoDAO(em);
         Mezzo mezzo = mezzoOB.findMezzoById(mezzoid);
-        int numeroBigliettiTrovati = mezzo.getListaBiglietti().size();
-        if (mezzo.getListaBiglietti().isEmpty()) {
+        int numeroBigliettiTrovati = mezzo.getListaGestioneVendità().size();
+        if (mezzo.getListaGestioneVendità().isEmpty()) {
             System.out.println("Non trovati");
             System.out.println("(╯°□°）╯︵ ┻━┻");
         } else {
             System.out.println("Trovati n: " + numeroBigliettiTrovati);
             System.out.println("(✿◠‿◠)");
         }
-        return mezzo.getListaBiglietti().size();
+        return mezzo.getListaGestioneVendità().size();
     }
 
 

@@ -1,6 +1,7 @@
 package claudiopostiglione.dao;
 
 import claudiopostiglione.entities.Mezzo;
+import claudiopostiglione.entities.PuntoEmissione;
 import claudiopostiglione.exceptions.IdNotFoundException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
@@ -47,6 +48,5 @@ public class MezzoDAO {
             return null;
         }
     }
-
 
 }

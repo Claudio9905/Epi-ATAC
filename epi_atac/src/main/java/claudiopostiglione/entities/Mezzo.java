@@ -21,7 +21,7 @@ public class Mezzo {
     private int capienza;
 
     @OneToMany(mappedBy = "mezzoObliterazione")
-    private List<Biglietto> listaBiglietti;
+    private List<GestioneVendita> listaGestioneVendità;
 
     @OneToMany(mappedBy = "mezzo")
     private List<StatoMezzo> listaStorico;
@@ -59,12 +59,12 @@ public class Mezzo {
         this.capienza = capienza;
     }
 
-    public List<Biglietto> getListaBiglietti() {
-        return listaBiglietti;
+    public List<GestioneVendita> getListaGestioneVendità() {
+        return listaGestioneVendità;
     }
 
-    public void setListaBiglietti(List<Biglietto> listaBiglietti) {
-        this.listaBiglietti = listaBiglietti;
+    public void setListaGestioneVendità(List<GestioneVendita> listaGestioneVendità) {
+        this.listaGestioneVendità = listaGestioneVendità;
     }
 
     public List<StatoMezzo> getListaStorico() {

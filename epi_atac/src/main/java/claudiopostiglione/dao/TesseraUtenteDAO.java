@@ -1,11 +1,14 @@
 package claudiopostiglione.dao;
 
+import claudiopostiglione.entities.Mezzo;
 import claudiopostiglione.entities.TesseraUtente;
 import claudiopostiglione.exceptions.IdNotFoundException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.TypedQuery;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class TesseraUtenteDAO {
     private final EntityManager em;
@@ -48,4 +51,22 @@ public class TesseraUtenteDAO {
         }
 
     }
+
+    public List<TesseraUtente> findAllTesseraUtente() {
+        try {
+            TypedQuery<TesseraUtente> query = em.createQuery("SELECT pe FROM TesseraUtente pe", TesseraUtente.class);
+            List<TesseraUtente> found = query.getResultList();
+
+            // Stampa ogni UUID su una nuova riga
+//            for (TesseraUtente id : found) {
+//                System.out.println(id);
+//            }
+
+            return found;
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            return null;
+        }
+    }
+
 }
