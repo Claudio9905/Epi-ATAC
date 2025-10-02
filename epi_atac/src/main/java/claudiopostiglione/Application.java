@@ -2,6 +2,7 @@ package claudiopostiglione;
 
 import claudiopostiglione.dao.*;
 import claudiopostiglione.entities.*;
+import claudiopostiglione.exceptions.emailUserNotFoundException;
 import com.github.javafaker.Faker;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -10,11 +11,9 @@ import jakarta.persistence.Persistence;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Random;
-import java.util.Scanner;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Supplier;
 
 public class Application {
 
@@ -23,10 +22,51 @@ public class Application {
     public static void main(String[] args) {
         EntityManager em = emf.createEntityManager();
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Connessione al database riuscita!");
-
         Faker f = new Faker();
         Random r = new Random();
+        UtenteDAO uDao = new UtenteDAO(em);
+        TesseraUtenteDAO td = new TesseraUtenteDAO(em);
+
+
+        // Creazione oggetto Utente
+        Supplier<Utente> utenteSupplier = () -> {
+            boolean rdnBoolean = r.nextBoolean();
+            return new Utente(f.name().firstName(), f.name().lastName(), f.internet().emailAddress(), getRandomDate(LocalDate.of(1945, 1, 1), LocalDate.now()), rdnBoolean);
+        };
+
+        for (int i = 0; i < 10; i++) {
+            uDao.save(utenteSupplier.get());
+        }
+
+
+        //Creazione oggetto tesseraUtente
+        Supplier<TesseraUtente> tesseraUtenteSupplier = () -> {
+            LocalDate dataTessera = getRandomDate(LocalDate.of(2015, 1, 1), LocalDate.now());
+
+            List<Long> longUsciti = new ArrayList<>();
+            long num;
+            while (true) {
+                num = r.nextLong(1, uDao.findNumeroUtenti() + 1);
+                System.out.println(num);
+                if (!longUsciti.contains(num)) {
+                    longUsciti.add(num);
+                    break;
+                }
+            }
+
+            return new TesseraUtente(dataTessera, uDao.findUtenteById(num));
+        };
+
+        for (int i = 0; i < uDao.findNumeroUtenti(); i++) {
+            td.save(tesseraUtenteSupplier.get());
+        }
+
+
+        //
+
+
+        System.out.println("Connessione al database riuscita!");
+
 
 //        UtenteDAO uDao = new UtenteDAO(em);
 //
@@ -154,26 +194,10 @@ public class Application {
 
         //-----------------------------------------------------------------------------------------------------------
 
-        System.out.println("|---               |----------|                                                                                                             ---|");
+        System.out.println("|---               |----------|                                 |------------------------------------|                              ---|");
         System.out.println("||---------------- | EPI-ATAC | --------------------------------||Home|| / ||About Us|| / ||Services|| /------------------------------||");
-        System.out.println("|---               |----------|                                                                                                             ---|");
+        System.out.println("|---               |----------|                                 |------------------------------------|                              ---|");
         System.out.println("\n");
-
-        System.out.println("|- Fase Login -|");
-        System.out.println("| Salve, benvenuto ad EPI-ATAC, prego, identificarsi come utente o amministratore: |--(1 Utente) / (2 Amministratore)--| ");
-        int scelta = Integer.parseInt(scanner.nextLine());
-
-        switch (scelta) {
-
-            case 1:
-                System.out.println("Sei già registrato? |--(1 - SI) / (2 - NO)--|");
-                scelta = Integer.parseInt(scanner.nextLine());
-                if (scelta == 1) {
-                    utenteRegistrato();
-                } else {
-
-                }
-        }
 
         // Qui verranno mostrate le tratte disponibili
         System.out.println("|- Sezione Tratte -|");
@@ -187,6 +211,30 @@ public class Application {
         System.out.println("|");
         System.out.println("|--------------------------------");
 
+        System.out.println("|- Fase Login -|");
+        System.out.println("| Salve, benvenuto ad EPI-ATAC, prego, identificarsi come utente o amministratore: |--(1 Utente) / (2 Amministratore)--| ");
+        int scelta = Integer.parseInt(scanner.nextLine());
+
+        switch (scelta) {
+
+            case 1:
+                System.out.println("Sei già registrato? |--(1 - SI) / (2 - NO)--|");
+                scelta = Integer.parseInt(scanner.nextLine());
+                if (scelta == 1) {
+                    try {
+                        System.out.println("| Inserisci le credenziali: --( E-mail )--");
+                        String emailUtente = scanner.nextLine();
+                        Utente utenteFound = uDao.findUtenteByEmail(emailUtente);
+                        utenteRegistrato(utenteFound);
+                    } catch (emailUserNotFoundException er) {
+                        System.out.println(er.getMessage());
+                    }
+
+                } else {
+                    //utenteNonRegistrato();
+                }
+        }
+
 
         System.out.println(isTheSubValid("b9b39507-1522-4da7-87ff-13ed178ceb3a", "10b72c5d-3767-4210-8cde-913ed88f4012", em));
     }
@@ -198,8 +246,34 @@ public class Application {
         return LocalDate.ofEpochDay(randomDay);
     }
 
-    public static void utenteRegistrato() {
-        System.out.println("");
+    public static void utenteRegistrato(Utente utente) {
+
+        Scanner scanner = new Scanner(System.in);
+        int scelta;
+
+        do {
+            System.out.println("| Ciao " + utente.getNome());
+            System.out.println("| Queste sono le opzioni disponibili:");
+            System.out.println("|  - Acquista biglietto (1) ");
+            System.out.println("|  - Acquistare abbonamento (2) ");
+            System.out.println("|  - Usare abbonamento (3) ");
+            scelta = Integer.parseInt(scanner.nextLine());
+
+            switch (scelta) {
+                case 1:
+                    // Bisogna creare un nuovo biglietto, con mezzo e tratta, tutti da salvare nel database
+                    break;
+                case 2:
+                    // Creazione di un abbonamento, stabilendo anche la tessera utente
+                    break;
+                case 3:
+                    break;
+                default:
+                    System.out.println("Attenzione, scelta non disponibile, prego, riprovare");
+            }
+        } while (scelta != 0);
+
+
     }
 
     public static void utenteNonRegistrato() {
@@ -224,4 +298,6 @@ public class Application {
         }
         return abbCercato.isValido();
     }
+
+
 }

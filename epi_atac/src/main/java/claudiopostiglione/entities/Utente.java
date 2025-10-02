@@ -12,8 +12,8 @@ public class Utente {
 
     //Attributi
     @Id
-    @GeneratedValue
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
     @Column(name = "Amministratore", nullable = false)
     private boolean amministratore;
     @Column(name = "Nome", nullable = false)
@@ -37,12 +37,21 @@ public class Utente {
         this.cognome = cognome;
         this.email = email;
         this.dataNascita = dataNascita;
+        this.tessera = tessera;
         this.amministratore = amministratore;
     }
 
     //Metodi
-    public UUID getId() {
+    public long getId() {
         return id;
+    }
+
+    public TesseraUtente getTessera() {
+        return tessera;
+    }
+
+    public void setTessera(TesseraUtente tessera) {
+        this.tessera = tessera;
     }
 
     public boolean isAmministratore() {
