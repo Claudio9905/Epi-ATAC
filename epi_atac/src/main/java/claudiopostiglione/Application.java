@@ -2,6 +2,7 @@ package claudiopostiglione;
 
 import claudiopostiglione.dao.*;
 import claudiopostiglione.entities.*;
+import claudiopostiglione.exceptions.IdNotFoundException;
 import claudiopostiglione.exceptions.emailUserNotFoundException;
 import claudiopostiglione.dao.MezzoDAO;
 import claudiopostiglione.dao.TesseraUtenteDAO;
@@ -319,11 +320,11 @@ public class Application {
                 scelta = Integer.parseInt(scanner.nextLine());
                 if (scelta == 1) {
                     try {
-                        System.out.println("| Inserisci le credenziali: --( E-mail )--");
-                        String emailUtente = scanner.nextLine();
-                        Utente utenteFound = uDao.findUtenteByEmail(emailUtente);
+                        System.out.println("| Inserisci le credenziali: --( ID Utente )--");
+                        String ID = scanner.nextLine();
+                        Utente utenteFound = uDao.findUtenteById(Long.parseLong(ID));
                         utenteRegistrato(utenteFound);
-                    } catch (emailUserNotFoundException er) {
+                    } catch (IdNotFoundException er) {
                         System.out.println(er.getMessage());
                     }
 
@@ -365,7 +366,7 @@ public class Application {
         do {
             System.out.println("| Ciao " + utente.getNome());
             System.out.println("| Queste sono le opzioni disponibili:");
-            System.out.println("|  - Acquista biglietto (1) ");
+            System.out.println("|  - Acquistare biglietto (1) ");
             System.out.println("|  - Acquistare abbonamento (2) ");
             System.out.println("|  - Usare abbonamento (3) ");
             System.out.println("|  - EXIT (0) ");
@@ -374,6 +375,7 @@ public class Application {
             switch (scelta) {
                 case 1:
                     // Bisogna creare un nuovo biglietto, con mezzo e tratta, tutti da salvare nel database
+                    System.out.println("Mi dispiace per l'inconveniente ma il nostro sistema è attualmente in manutenzione e le tratte disponibili sono solo: ");
                     break;
                 case 2:
                     // Creazione di un abbonamento, stabilendo anche la tessera utente
