@@ -36,12 +36,21 @@ public class Utente {
         this.cognome = cognome;
         this.email = email;
         this.dataNascita = dataNascita;
+        this.tessera = tessera;
         this.amministratore = amministratore;
     }
 
     //Metodi
     public long getId() {
         return id;
+    }
+
+    public TesseraUtente getTessera() {
+        return tessera;
+    }
+
+    public void setTessera(TesseraUtente tessera) {
+        this.tessera = tessera;
     }
 
     public boolean isAmministratore() {

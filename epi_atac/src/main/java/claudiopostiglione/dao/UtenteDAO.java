@@ -2,8 +2,10 @@ package claudiopostiglione.dao;
 
 import claudiopostiglione.entities.Utente;
 import claudiopostiglione.exceptions.IdNotFoundException;
+import claudiopostiglione.exceptions.emailUserNotFoundException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.TypedQuery;
 
 public class UtenteDAO {
 
@@ -30,5 +32,20 @@ public class UtenteDAO {
             System.err.println(e.getMessage());
             return null;
         }
+    }
+
+    public Utente findUtenteByEmail(String email){
+        Utente found = em.find(Utente.class, email);
+        if(found==null) throw new emailUserNotFoundException(email);
+        return found;
+    }
+
+    public long findNumeroUtenti(){
+        TypedQuery<Utente> query = em.createQuery("SELECT COUNT(ut) FROM Utente ut", Utente.class);
+        long found = query.getFirstResult();
+        if(found == 0){
+            System.out.println("Nessun utente creato");
+        }
+        return found;
     }
 }

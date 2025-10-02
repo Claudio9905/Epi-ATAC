@@ -18,7 +18,6 @@ public class TesseraUtente {
     private LocalDate dataInizio;
     @Column(name = "Data_Scadenza", nullable = false)
     private LocalDate dataScadenza;
-    private boolean valido;
 
     @OneToMany(mappedBy = "tessera")
     private List<Abbonamento> abbonamento;
@@ -57,14 +56,6 @@ public class TesseraUtente {
 
     public void setDataScadenza(LocalDate dataScadenza) {
         this.dataScadenza = dataScadenza;
-    }
-
-    public boolean isValido() {
-        return valido;
-    }
-
-    public void setValido(boolean valido) {
-        this.valido = valido;
     }
 
     public List<Abbonamento> getAbbonamento() {

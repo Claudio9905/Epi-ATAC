@@ -1,5 +1,8 @@
 package claudiopostiglione;
 
+import claudiopostiglione.dao.*;
+import claudiopostiglione.entities.*;
+import claudiopostiglione.exceptions.emailUserNotFoundException;
 import claudiopostiglione.dao.GestioneVenditaDAO;
 import claudiopostiglione.dao.MezzoDAO;
 import claudiopostiglione.dao.TesseraUtenteDAO;
@@ -12,10 +15,15 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Supplier;
 
 public class Application {
 
@@ -23,10 +31,73 @@ public class Application {
 
     public static void main(String[] args) {
         EntityManager em = emf.createEntityManager();
-        System.out.println("Connessione al database riuscita!");
-
+        Scanner scanner = new Scanner(System.in);
         Faker f = new Faker();
         Random r = new Random();
+
+        //Oggetti DAO per interaggire con il DB
+        UtenteDAO uDao = new UtenteDAO(em);
+        TesseraUtenteDAO td = new TesseraUtenteDAO(em);
+        PuntoEmissioneDAO ped = new PuntoEmissioneDAO(em);
+
+        // Creazione oggetto Utente
+        Supplier<Utente> utenteSupplier = () -> {
+            boolean rdnBoolean = r.nextBoolean();
+            return new Utente(f.name().firstName(), f.name().lastName(), f.internet().emailAddress(), getRandomDate(LocalDate.of(1945, 1, 1), LocalDate.now()), rdnBoolean);
+        };
+
+        for (int i = 0; i < 10; i++) {
+            uDao.save(utenteSupplier.get());
+        }
+
+
+        //Creazione oggetto tesseraUtente
+        Supplier<TesseraUtente> tesseraUtenteSupplier = () -> {
+            LocalDate dataTessera = getRandomDate(LocalDate.of(2015, 1, 1), LocalDate.now());
+
+            List<Long> longUsciti = new ArrayList<>();
+            long num;
+            while (true) {
+                num = r.nextLong(1, uDao.findNumeroUtenti() + 1);
+                System.out.println(num);
+                if (!longUsciti.contains(num)) {
+                    longUsciti.add(num);
+                    break;
+                }
+            }
+
+            return new TesseraUtente(dataTessera, uDao.findUtenteById(num));
+        };
+
+        for (int i = 0; i < uDao.findNumeroUtenti(); i++) {
+            td.save(tesseraUtenteSupplier.get());
+        }
+
+        //Creazione oggetto DistributoreAutomatico
+        Supplier<DistributoreAutomatico> distributoreAutomaticoSupplier = () -> new DistributoreAutomatico(f.address().cityName(),r.nextBoolean());
+
+        for(int i = 0; i < 10; i++){
+            ped.save(distributoreAutomaticoSupplier.get());
+        }
+
+//        //Creazione oggetto NegozioRivenditore
+//        Supplier<NegozioRivenditore> negozioRivenditoreSupplier = () ->{
+//            return new NegozioRivenditore(f.address().cityName(),f.company().name(),LocalTime.of(9,9),LocalTime.of(18,0));
+//        };
+//
+//
+//        //Creazione oggetto abbonamento
+//        Supplier<Abbonamento> abbonamentoSupplier = () -> {
+//
+//            String[] tipoAbbonamento = {"MENSILE", "SETTIMANALE"};
+//            TipoAbbonamento tipo = TipoAbbonamento.valueOf(tipoAbbonamento[r.nextInt(0,2)]);
+//
+//                return new Abbonamento(tipo, getRandomDate(LocalDate.of(2024,1,1), LocalDate.now()),)
+//        };
+
+
+        System.out.println("Connessione al database riuscita!");
+
 
 //        UtenteDAO uDao = new UtenteDAO(em);
 //
@@ -168,6 +239,52 @@ public class Application {
 
 //        System.out.println(gvDao.totalSoldTicketsInSalePlace("25d38f55-1c5c-453c-9da6-a0ea24df1089"));
 
+
+        //-----------------------------------------------------------------------------------------------------------
+
+        System.out.println("|---               |----------|                                 |------------------------------------|                              ---|");
+        System.out.println("||---------------- | EPI-ATAC | --------------------------------||Home|| / ||About Us|| / ||Services|| /------------------------------||");
+        System.out.println("|---               |----------|                                 |------------------------------------|                              ---|");
+        System.out.println("\n");
+
+        // Qui verranno mostrate le tratte disponibili
+        System.out.println("|- Sezione Tratte -|");
+        System.out.println("|--------------------------------");
+        System.out.println("|");
+        System.out.println("|");
+        System.out.println("|");
+        System.out.println("|");
+        System.out.println("|");
+        System.out.println("|");
+        System.out.println("|");
+        System.out.println("|--------------------------------");
+
+        System.out.println("|- Fase Login -|");
+        System.out.println("| Salve, benvenuto ad EPI-ATAC, prego, identificarsi come utente o amministratore: |--(1 Utente) / (2 Amministratore)--| ");
+        int scelta = Integer.parseInt(scanner.nextLine());
+
+        switch (scelta) {
+
+            case 1:
+                System.out.println("Sei già registrato? |--(1 - SI) / (2 - NO)--|");
+                scelta = Integer.parseInt(scanner.nextLine());
+                if (scelta == 1) {
+                    try {
+                        System.out.println("| Inserisci le credenziali: --( E-mail )--");
+                        String emailUtente = scanner.nextLine();
+                        Utente utenteFound = uDao.findUtenteByEmail(emailUtente);
+                        utenteRegistrato(utenteFound);
+                    } catch (emailUserNotFoundException er) {
+                        System.out.println(er.getMessage());
+                    }
+
+                } else {
+                    //utenteNonRegistrato();
+                }
+        }
+
+
+        System.out.println(isTheSubValid("b9b39507-1522-4da7-87ff-13ed178ceb3a", "10b72c5d-3767-4210-8cde-913ed88f4012", em));
         //System.out.println(isTheSubValid("b9b39507-1522-4da7-87ff-13ed178ceb3a", "10b72c5d-3767-4210-8cde-913ed88f4012", em));
 
 //        obliteratiPerMezzo("33ace2d7-6ed5-4dba-94d8-5b5e7f77d130", em);
@@ -183,6 +300,42 @@ public class Application {
         return LocalDate.ofEpochDay(randomDay);
     }
 
+    public static void utenteRegistrato(Utente utente) {
+
+        Scanner scanner = new Scanner(System.in);
+        int scelta;
+
+        do {
+            System.out.println("| Ciao " + utente.getNome());
+            System.out.println("| Queste sono le opzioni disponibili:");
+            System.out.println("|  - Acquista biglietto (1) ");
+            System.out.println("|  - Acquistare abbonamento (2) ");
+            System.out.println("|  - Usare abbonamento (3) ");
+            scelta = Integer.parseInt(scanner.nextLine());
+
+            switch (scelta) {
+                case 1:
+                    // Bisogna creare un nuovo biglietto, con mezzo e tratta, tutti da salvare nel database
+                    break;
+                case 2:
+                    // Creazione di un abbonamento, stabilendo anche la tessera utente
+                    break;
+                case 3:
+                    break;
+                default:
+                    System.out.println("Attenzione, scelta non disponibile, prego, riprovare");
+            }
+        } while (scelta != 0);
+
+
+    }
+
+    public static void utenteNonRegistrato() {
+        System.out.println("");
+    }
+
+    
+    
     public static boolean isTheSubValid(String idAbbonamento, long idTessera, EntityManager em) {
         try {
             TesseraUtenteDAO tuDao = new TesseraUtenteDAO(em);
