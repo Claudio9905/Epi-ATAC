@@ -16,11 +16,16 @@ public class Biglietto extends GestioneVendita {
     public Biglietto() {
     }
 
+
     public Biglietto(LocalDate dataAcquisto, PuntoEmissione puntoEmissione, LocalDate dataObliterazione, Mezzo mezzoObliterazione) {
         super(dataAcquisto, puntoEmissione, mezzoObliterazione);
         DataObliterazione = dataObliterazione;
     }
 
+    public Biglietto(LocalDate dataAcquisto, PuntoEmissione puntoEmissione, Mezzo mezzoObliterazione) {
+        super(dataAcquisto, puntoEmissione, mezzoObliterazione);
+
+    }
     //Metodi
 
     public LocalDate getDataObliterazione() {

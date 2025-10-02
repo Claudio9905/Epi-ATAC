@@ -1,10 +1,13 @@
 package claudiopostiglione.dao;
 
 import claudiopostiglione.entities.Mezzo;
+import claudiopostiglione.entities.PuntoEmissione;
 import claudiopostiglione.exceptions.IdNotFoundException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.TypedQuery;
 
+import java.util.List;
 import java.util.UUID;
 
 public class MezzoDAO {
@@ -34,5 +37,21 @@ public class MezzoDAO {
         }
     }
 
+    public List<Mezzo> findAllMezzo() {
+        try {
+            TypedQuery<Mezzo> query = em.createQuery("SELECT pe FROM Mezzo pe", Mezzo.class);
+            List<Mezzo> found = query.getResultList();
+
+            // Stampa ogni UUID su una nuova riga
+//            for (Mezzo id : found) {
+//                System.out.println(id);
+//            }
+
+            return found;
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            return null;
+        }
+    }
 
 }

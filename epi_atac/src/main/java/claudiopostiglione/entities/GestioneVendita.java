@@ -36,6 +36,12 @@ public abstract class GestioneVendita {
         this.mezzoObliterazione = mezzoObliterazione;
     }
 
+    public GestioneVendita(LocalDate dataAcquisto, PuntoEmissione puntoEmissione) {
+        this.dataAcquisto = dataAcquisto;
+        this.puntoEmissione = puntoEmissione;
+    }
+
+
 
     //Metodi
     public UUID getId() {
