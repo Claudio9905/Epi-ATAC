@@ -41,6 +41,7 @@ public class Application {
         MezzoDAO md = new MezzoDAO(em);
         TrattaDAO trd = new TrattaDAO(em);
         StatoMezzoDAO std = new StatoMezzoDAO(em);
+        MezzoTrattaDAO mtd = new MezzoTrattaDAO(em);
 
         // Creazione oggetto Utente
         Supplier<Utente> utenteSupplier = () -> {
@@ -169,6 +170,10 @@ public class Application {
             return new MezzoTratta(orarioP, orarioP.plusHours(4), tratta, mezzo);
         };
 
+        for(int i = 0; i < 20; i++){
+            mtd.save(mezzoTrattaSupplier.get());
+        }
+
         //Creazione oggetto StatoMezzo
         Supplier<StatoMezzo> statoMezzoSupplier = () -> {
 
@@ -176,7 +181,7 @@ public class Application {
             Mezzo mezzo = listaMezzo.get(r.nextInt(0, listaMezzo.size()));
 
             String[] tipoStato = {"IN_SERVIZIO", "IN_MANUTENZIONE"};
-            TipoStatoMezzo tipo = TipoStatoMezzo.valueOf(tipoStato[r.nextInt(0, 2)]);
+            TipoStatoMezzo tipo = TipoStatoMezzo.valueOf(tipoStato[r.nextInt(0, 1)]);
 
             boolean rdmBoolean = r.nextBoolean();
             LocalDate dataInizio = getRandomDate(LocalDate.of(2024, 1, 1), LocalDate.now());
