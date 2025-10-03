@@ -47,7 +47,7 @@ Per la creazione del progetto, sono stati implementati varie tecnologie:
 - framework HIBERNATE
 
 Collaboratori del progetto :
-- Thoma Galbignani
+- Thomas Galbignani
 - Cristina Mastellaro
 - Mattia Pastorini
 - Claudio Postiglione
