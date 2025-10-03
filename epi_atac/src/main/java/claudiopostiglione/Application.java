@@ -22,7 +22,7 @@ public class Application {
     public static Scanner scanner = new Scanner(System.in);
     public static Random r = new Random();
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         EntityManager em = emf.createEntityManager();
         Faker f = new Faker();
 
@@ -191,8 +191,10 @@ public class Application {
 //            std.save(statoMezzoSupplier.get());
 //        }
 
-
-        System.out.println("Connessione al database riuscita!");
+        System.out.println("Connessione in corso...");
+        Thread.sleep(4000);
+        System.out.println("Benvenuti su Epi-ATAC!");
+        Thread.sleep(2000);
 
         //-----------------------------------------------------------------------------------------------------------
 
@@ -218,29 +220,25 @@ public class Application {
 //        System.out.println("|");
         System.out.println("|");
         System.out.println("|--------------------------------");
-
+        System.out.println("|");
+        System.out.println("| Accesso alla sezione login in corso...");
+        Thread.sleep(4000);
         while (true) {
             System.out.println("|- Login -|");
             System.out.println("| Salve, benvenuto ad EPI-ATAC, prego, identificarsi come utente o amministratore: |--(1 Utente) / (2 Amministratore) / ('q' EXIT) --| ");
-
             try {
-
                 String scelta = scanner.nextLine();
-
                 switch (scelta) {
-
                     case "q":
                         break;
                     case "1":
                         //Sezione utente
                         int secondaScelta;
                         do {
-
                             System.out.println("Sei già registrato? |--(1 - SI) / (2 - NO)--|");
                             secondaScelta = Integer.parseInt(scanner.nextLine());
                             if (secondaScelta == 1) {
                                 try {
-
                                     System.out.println("| Inserisci le credenziali: --( ID Utente )--");
                                     String ID = scanner.nextLine();
                                     Utente utenteFound = uDao.findUtenteById(Long.parseLong(ID));
@@ -263,7 +261,11 @@ public class Application {
                         System.out.println("Inserisci il numero utente:");
                         String ID = scanner.nextLine();
                         Utente utenteFound = uDao.findUtenteById(Long.parseLong(ID));
-                        amministratore(utenteFound, em);
+                        if (utenteFound.isAmministratore()) amministratore(utenteFound, em);
+                        else {
+                            System.out.println("Il numero di tessera inserito non appartiene a un amministratore");
+                            System.out.println("(ノಠ益ಠ)ノ彡┻━┻");
+                        }
                         break;
                     default:
                         System.out.println("Attenzione, scelta non disponibile, prego riprovare");
