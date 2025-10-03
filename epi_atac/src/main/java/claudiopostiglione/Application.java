@@ -220,54 +220,54 @@ public class Application {
 
         System.out.println("|- Login -|");
         System.out.println("| Salve, benvenuto ad EPI-ATAC, prego, identificarsi come utente o amministratore: |--(1 Utente) / (2 Amministratore) / ('q' EXIT) --| ");
-        while(true) {
+        while (true) {
 
             try {
 
-            String scelta = scanner.nextLine();
+                String scelta = scanner.nextLine();
 
-            switch (scelta) {
+                switch (scelta) {
 
-                case "q":
-                    break;
-                case "1":
-                    //Sezione utente
-                    int secondaScelta;
-                    do {
-
-                    System.out.println("Sei già registrato? |--(1 - SI) / (2 - NO)--|");
-                     secondaScelta = Integer.parseInt(scanner.nextLine());
-                    if (secondaScelta == 1) {
-                        try {
-
-                            System.out.println("| Inserisci le credenziali: --( ID Utente )--");
-                            String ID = scanner.nextLine();
-                            Utente utenteFound = uDao.findUtenteById(Long.parseLong(ID));
-                            utenteRegistrato(utenteFound, em);
-                        } catch (IdNotFoundException er) {
-                            System.out.println(er.getMessage());
-                        }
+                    case "q":
                         break;
-                    } else if (secondaScelta == 2 ){
-                        utenteNonRegistrato(em);
+                    case "1":
+                        //Sezione utente
+                        int secondaScelta;
+                        do {
+
+                            System.out.println("Sei già registrato? |--(1 - SI) / (2 - NO)--|");
+                            secondaScelta = Integer.parseInt(scanner.nextLine());
+                            if (secondaScelta == 1) {
+                                try {
+
+                                    System.out.println("| Inserisci le credenziali: --( ID Utente )--");
+                                    String ID = scanner.nextLine();
+                                    Utente utenteFound = uDao.findUtenteById(Long.parseLong(ID));
+                                    utenteRegistrato(utenteFound, em);
+                                } catch (IdNotFoundException er) {
+                                    System.out.println(er.getMessage());
+                                }
+                                break;
+                            } else if (secondaScelta == 2) {
+                                utenteNonRegistrato(em);
+                                break;
+                            } else {
+                                System.out.println("Scelta non disponibile");
+
+                            }
+                        } while (secondaScelta != 1 || secondaScelta != 2);
                         break;
-                    }else{
-                        System.out.println("Scelta non disponibile");
+                    case "2":
+                        //Sezione amministratore
+                        System.out.println("Inserisci il numero utente:");
+                        String ID = scanner.nextLine();
+                        Utente utenteFound = uDao.findUtenteById(Long.parseLong(ID));
+                        amministratore(utenteFound, em);
+                        break;
+                    default:
 
-                    }
-                    }while(secondaScelta != 1 || secondaScelta != 2);
-                    break;
-                case "2":
-                    //Sezione amministratore
-                    System.out.println("Inserisci il numero utente:");
-                    String ID = scanner.nextLine();
-                    Utente utenteFound = uDao.findUtenteById(Long.parseLong(ID));
-                    amministratore(utenteFound, em);
-                    break;
-                default:
-
-                    System.out.println("Attenzione, scelta non disponibile, prego riprovare");
-            }
+                        System.out.println("Attenzione, scelta non disponibile, prego riprovare");
+                }
             } catch (NumberFormatException e) {
                 System.out.println(e.getMessage());
             }
@@ -282,10 +282,6 @@ public class Application {
         //       tuDao.renewTessera(1);
 
         //peDao.findAllPuntoEmissione();
-
-
-
-
 
 
     }
@@ -435,7 +431,7 @@ public class Application {
             if (abbCercato.getDataScadenza().isAfter(LocalDate.now())) {
                 System.out.println("L'abbonamento è valido!");
             } else {
-                System.out.println("L'abbonamento non è valido"+" "+ "(╯°□°）╯︵ ┻━┻");
+                System.out.println("L'abbonamento non è valido" + " " + "(╯°□°）╯︵ ┻━┻");
             }
             return abbCercato.getDataScadenza().isAfter(LocalDate.now());
         } catch (Exception e) {
@@ -488,15 +484,51 @@ public class Application {
     }
 
     public static void amministratore(Utente utente, EntityManager em) {
-        while(true){
-            try{
-        System.out.println("| Ciao " + utente.getNome());
-        System.out.println("| Queste sono le opzioni disponibili:");
-        System.out.println("| 0 - EXIT (0) ");
-        System.out.println("| 1 - Calcolare il tempo medio effettivo di percorrenza di un mezzo ");
-        System.out.println("| 2 - Controllare il numero di biglietti/abbonamenti in un periodo");
-        System.out.println("| 3 - Tenere traccia del numero di volte che un mezzo percorre una tratta e del tempo effettivo di percorrenza di esse ");
-    }catch (Exception e){
+        MezzoTrattaDAO mtDAO = new MezzoTrattaDAO(em);
+        while (true) {
+            try {
+                System.out.println("| Ciao " + utente.getNome());
+                System.out.println("| Queste sono le opzioni disponibili:");
+                System.out.println("| 0 - EXIT (0) ");
+                System.out.println("| 1 - Calcolare il tempo medio effettivo di percorrenza di un mezzo ");
+                System.out.println("| 2 - Controllare il numero di biglietti/abbonamenti in un periodo");
+                System.out.println("| 3 - Tenere traccia del numero di volte che un mezzo percorre una " +
+                        "tratta e del tempo effettivo di percorrenza di esse ");
+                System.out.println("| 4 - Calcolo del tempo medio effettivo di percorrenza di una tratta da parte di un mezzo");
+                int scelta = Integer.parseInt(scanner.nextLine());
+
+                switch (scelta) {
+
+                    case 1:
+
+                        break;
+                    case 2:
+
+                        break;
+                    case 3:
+                        //Sezione traccia tempo e percorso
+                        System.out.println("Inserisci l'ID del mezzo:");
+                        String bohId = scanner.nextLine();
+                        mtDAO.findAllTratteOfMezzo(bohId);
+                        break;
+//                    case 4:
+//                        //Sezione traccia tempo e percorso
+//                        System.out.println("Inserisci il numero utente:");
+//                        String ID = scanner.nextLine();
+//                        Utente utenteFound = uDao.findUtenteById(Long.parseLong(ID));
+//                        amministratore(utenteFound, em);
+//                        break;
+                    case 0:
+                        //ESCI
+                        System.out.println("Grazie per aver usufruito dei nostri servizi e buon viaggio!");
+                        System.out.println("(✿◠‿◠)");
+                        break;
+                    default:
+
+                        System.out.println("Attenzione, scelta non disponibile, prego riprovare");
+                }
+
+            } catch (Exception e) {
                 System.err.println(e.getMessage() + "Hai Sbagliato!  (╯°□°）╯︵ ┻━┻");
             }
         }
