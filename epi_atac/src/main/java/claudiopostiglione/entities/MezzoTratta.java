@@ -33,6 +33,7 @@ public class MezzoTratta {
     public MezzoTratta() {
     }
 
+
     public MezzoTratta(LocalTime orarioPartenza, LocalTime orarioArrivo, Tratta tratta, Mezzo mezzo) {
         this.orarioPartenza = orarioPartenza;
         this.tratta = tratta;
@@ -54,8 +55,8 @@ public class MezzoTratta {
         return percorrenzaEffettiva;
     }
 
-    public void setPercorrenzaEffettiva(int percorrenzzaEffettiva) {
-        this.percorrenzaEffettiva = percorrenzzaEffettiva;
+    public void setPercorrenzaEffettiva(int percorrenzaEffettiva) {
+        this.percorrenzaEffettiva = percorrenzaEffettiva;
     }
 
     public void setPercorrenzaEffettiva(long percorrenzaEffettiva) {

@@ -8,6 +8,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.TypedQuery;
 
+import javax.management.Query;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -44,11 +45,25 @@ public class MezzoTrattaDAO {
         try {
             TypedQuery<MezzoTratta> query = em.createQuery("SELECT mt FROM MezzoTratta mt", MezzoTratta.class);
             List<MezzoTratta> found = query.getResultList();
-            if (found.isEmpty()) System.out.println("Non sono stati trovate tratte.");
+            if (found.isEmpty()) System.out.println("Non sono state trovate tratte");
             return found;
         } catch (Exception e) {
             System.err.println(e.getMessage());
             return null;
+        }
+    }
+    public void tempoMedioPercorrenzaTratta(Tratta tratta){
+
+        try {
+
+            TypedQuery<Double> query = em.createQuery("SELECT AVG(mt.percorrenzaEffettiva) FROM MezzoTratta mt WHERE mt.tratta = :tratta", Double.class);
+            query.setParameter("tratta", tratta);
+            Double found = query.getSingleResult();
+            if (found == 0) System.out.println("Questa tratta non è mai stata percorsa (ಥ﹏ಥ)");
+            else System.out.println("Questa tratta è stata percorsa in media in " + found + " minuti" );
+
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
         }
     }
 
@@ -56,10 +71,10 @@ public class MezzoTrattaDAO {
         MezzoDAO mezzoDAO = new MezzoDAO(em);
         try {
             UUID idUUID = UUID.fromString(id);
-            Mezzo mezzo = mezzoDAO.findMezzoById(idUUID);
-            TypedQuery<Mezzo> query = em.createQuery("SELECT mt.tratta, mt.percorrenzaEffettiva FROM MezzoTratta mt WHERE mt.mezzo = :id GROUP BY mt.tratta ", Mezzo.class);
-            query.setParameter("id", mezzo);
-            List<Mezzo> found = query.getResultList();
+//            Mezzo mezzo = mezzoDAO.findMezzoById(idUUID);
+            TypedQuery<Long> query = em.createQuery("SELECT mt.tratta, COUNT(mt.mezzo) FROM MezzoTratta mt WHERE mt.mezzo.id = :id GROUP BY mt.tratta", Long.class);
+            query.setParameter("id", idUUID);
+            List<Long> found = query.getResultList();
             System.out.println(found);
 //            Map<Tratta, MezzoTratta> orderFound = found.stream().sorted(Comparator.comparing(MezzoTratta::getTratta));
 //            if (found.isEmpty()) System.out.println("Non sono stati trovate tratte.");
