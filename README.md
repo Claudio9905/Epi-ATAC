@@ -33,7 +33,7 @@ MODELLO ER: (Tutte le relazioni hanno un id autogenerativo che indica )
 - TRATTA(id, zona_partenza, capolinea, percorrenza_effettiva)
 ---------------------------------------------------------------------------------------------
 
-ERM da PG-ADMIN
+ERD (Entity Relationship Diagram)
 <img width="1030" height="844" alt="Screenshot 2025-10-03 104456" src="https://github.com/user-attachments/assets/ba4280de-6086-4943-bc5f-5ec4295edf1e" />
 
 ---------------------------------------------------------------------------------------------
