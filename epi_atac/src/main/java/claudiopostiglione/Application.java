@@ -9,11 +9,10 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Random;
-import java.util.Scanner;
-import java.util.UUID;
+import java.time.LocalTime;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Supplier;
 
 public class Application {
 
@@ -37,159 +36,159 @@ public class Application {
         MezzoTrattaDAO mtd = new MezzoTrattaDAO(em);
 
         // Creazione oggetto Utente
-//        Supplier<Utente> utenteSupplier = () -> {
-//            boolean rdnBoolean = r.nextBoolean();
-//            return new Utente(f.lordOfTheRings().character(), f.name().lastName(), f.internet().emailAddress(), getRandomDate(LocalDate.of(1945, 1, 1), LocalDate.now()), rdnBoolean);
-//        };
-//
-//        for (int i = 0; i < 20; i++) {
-//            uDao.save(utenteSupplier.get());
-//        }
-//
-//
-//        //Creazione oggetto tesseraUtente
-//        List<Long> longUsciti = new ArrayList<>();
-//        Supplier<TesseraUtente> tesseraUtenteSupplier = () -> {
-//            LocalDate dataTessera = getRandomDate(LocalDate.of(2015, 1, 1), LocalDate.now());
-//
-//            long num;
-//            while (true) {
-//                num = r.nextLong(1, uDao.findNumeroUtenti() + 1);
-//                if (!longUsciti.contains(num)) {
-//                    longUsciti.add(num);
-//                    break;
-//                }
-//            }
-//
-//            return new TesseraUtente(dataTessera, uDao.findUtenteById(num));
-//        };
-//
-//        for (int i = 0; i < uDao.findNumeroUtenti(); i++) {
-//            td.save(tesseraUtenteSupplier.get());
-//        }
-//
-//        //Creazione oggetto Mezzo
-//        Supplier<Mezzo> mezzoSupplier = () -> {
-//
-//            String[] tipoMezzo = {"TRAM", "AUTOBUS"};
-//            TipoMezzo mezzo = TipoMezzo.valueOf(tipoMezzo[r.nextInt(0, 2)]);
-//
-//            return new Mezzo(mezzo, r.nextInt(0, 95));
-//        };
-//
-//        for (int i = 0; i < 20; i++) {
-//            md.save(mezzoSupplier.get());
-//        }
-//
-//        //Creazione oggetto DistributoreAutomatico
-//        Supplier<DistributoreAutomatico> distributoreAutomaticoSupplier = () -> new DistributoreAutomatico(f.address().cityName(), r.nextBoolean());
-//
-//        for (int i = 0; i < 10; i++) {
-//            ped.save(distributoreAutomaticoSupplier.get());
-//        }
-//
-//        //Creazione oggetto NegozioRivenditore
-//        Supplier<NegozioRivenditore> negozioRivenditoreSupplier = () -> new NegozioRivenditore(f.address().cityName(), f.lordOfTheRings().character(), f.company().name(), LocalTime.of(9, 9), LocalTime.of(18, 0));
-//        for (int i = 0; i < 10; i++) {
-//            ped.save(negozioRivenditoreSupplier.get());
-//        }
-//
-//        //Creazione oggetto Biglietto
-//        Supplier<Biglietto> bigliettoSupplier = () -> {
-//
-//            List<Mezzo> listaMezzo = md.findAllMezzo();
-//            Mezzo mezzo = listaMezzo.get(r.nextInt(0, listaMezzo.size()));
-//
-//            List<PuntoEmissione> listaPuntiEmissione = ped.findAllPuntoEmissione();
-//            PuntoEmissione punto = listaPuntiEmissione.get(r.nextInt(0, listaPuntiEmissione.size()));
-//
-//            boolean rdmBoolean = r.nextBoolean();
-//
-//            LocalDate dataAcquisto = getRandomDate(LocalDate.of(2024, 1, 1), LocalDate.of(2025, 1, 1));
-//
-//            if (rdmBoolean) {
-//                return new Biglietto(dataAcquisto, punto, dataAcquisto.plusDays(r.nextLong(0, 5)), mezzo);
-//            } else {
-//                return new Biglietto(getRandomDate(LocalDate.of(2024, 1, 1), LocalDate.of(2025, 1, 1)), punto, mezzo);
-//            }
-//
-//        };
-//
-//        for (int i = 0; i < 20; i++) {
-//            gd.save(bigliettoSupplier.get());
-//        }
-//
-//        //Creazione oggetto abbonamento
-//        Supplier<Abbonamento> abbonamentoSupplier = () -> {
-//
-//            String[] tipoAbbonamento = {"MENSILE", "SETTIMANALE"};
-//            TipoAbbonamento tipo = TipoAbbonamento.valueOf(tipoAbbonamento[r.nextInt(0, 2)]);
-//
-//            List<PuntoEmissione> listaPuntiEmissione = ped.findAllPuntoEmissione();
-//            PuntoEmissione punto = listaPuntiEmissione.get(r.nextInt(0, listaPuntiEmissione.size()));
-//
-//            List<TesseraUtente> listaTesseraUtente = td.findAllTesseraUtente();
-//            TesseraUtente tessera = listaTesseraUtente.get(r.nextInt(0, listaTesseraUtente.size()));
-//
-//            return new Abbonamento(tipo, getRandomDate(LocalDate.of(2024, 1, 1), LocalDate.now()), punto, tessera);
-//        };
-//
-//        for (int i = 0; i < 20; i++) {
-//            gd.save(abbonamentoSupplier.get());
-//        }
-//
-//        //Creazione oggetto Tratta
-//        Supplier<Tratta> trattaSupplier = () -> {
-//            return new Tratta(r.nextInt(45, 120), f.lordOfTheRings().location(), f.lordOfTheRings().location());
-//        };
-//
-//        for (int i = 0; i < 10; i++) {
-//            trd.save(trattaSupplier.get());
-//        }
-//
-//        //Creazione oggetto MezzaTratta
-//        Supplier<MezzoTratta> mezzoTrattaSupplier = () -> {
-//
-//            int orarioPh = r.nextInt(1, 23);
-//            int orarioPm = r.nextInt(1, 59);
-//            LocalTime orarioP = LocalTime.of(orarioPh, orarioPm);
-//
-//            List<Tratta> listaTratta = trd.findAllTratte();
-//            Tratta tratta = listaTratta.get(r.nextInt(0, listaTratta.size()));
-//
-//            List<Mezzo> listaMezzo = md.findAllMezzo();
-//            Mezzo mezzo = listaMezzo.get(r.nextInt(0, listaMezzo.size()));
-//
-//            return new MezzoTratta(orarioP, orarioP.plusHours(4), tratta, mezzo);
-//        };
-//
-//        for (int i = 0; i < 20; i++) {
-//            mtd.save(mezzoTrattaSupplier.get());
-//        }
-//
-//        //Creazione oggetto StatoMezzo
-//        Supplier<StatoMezzo> statoMezzoSupplier = () -> {
-//
-//            List<Mezzo> listaMezzo = md.findAllMezzo();
-//            Mezzo mezzo = listaMezzo.get(r.nextInt(0, listaMezzo.size()));
-//
-//            String[] tipoStato = {"IN_SERVIZIO", "IN_MANUTENZIONE"};
-//            TipoStatoMezzo tipo = TipoStatoMezzo.valueOf(tipoStato[r.nextInt(0, 1)]);
-//
-//            boolean rdmBoolean = r.nextBoolean();
-//            LocalDate dataInizio = getRandomDate(LocalDate.of(2024, 1, 1), LocalDate.now());
-//
-//            if (rdmBoolean) {
-//                return new StatoMezzo(mezzo, tipo, dataInizio, dataInizio.plusYears(4));
-//            } else {
-//                return new StatoMezzo(mezzo, tipo, dataInizio, dataInizio.minusMonths(2), "Guasto al veicolo");
-//            }
-//
-//        };
-//
-//        for (int i = 0; i < 20; i++) {
-//            std.save(statoMezzoSupplier.get());
-//        }
+        Supplier<Utente> utenteSupplier = () -> {
+            boolean rdnBoolean = r.nextBoolean();
+            return new Utente(f.lordOfTheRings().character(), f.name().lastName(), f.internet().emailAddress(), getRandomDate(LocalDate.of(1945, 1, 1), LocalDate.now()), rdnBoolean);
+        };
+
+        for (int i = 0; i < 20; i++) {
+            uDao.save(utenteSupplier.get());
+        }
+
+
+        //Creazione oggetto tesseraUtente
+        List<Long> longUsciti = new ArrayList<>();
+        Supplier<TesseraUtente> tesseraUtenteSupplier = () -> {
+            LocalDate dataTessera = getRandomDate(LocalDate.of(2015, 1, 1), LocalDate.now());
+
+            long num;
+            while (true) {
+                num = r.nextLong(1, uDao.findNumeroUtenti() + 1);
+                if (!longUsciti.contains(num)) {
+                    longUsciti.add(num);
+                    break;
+                }
+            }
+
+            return new TesseraUtente(dataTessera, uDao.findUtenteById(num));
+        };
+
+        for (int i = 0; i < uDao.findNumeroUtenti(); i++) {
+            td.save(tesseraUtenteSupplier.get());
+        }
+
+        //Creazione oggetto Mezzo
+        Supplier<Mezzo> mezzoSupplier = () -> {
+
+            String[] tipoMezzo = {"TRAM", "AUTOBUS"};
+            TipoMezzo mezzo = TipoMezzo.valueOf(tipoMezzo[r.nextInt(0, 2)]);
+
+            return new Mezzo(mezzo, r.nextInt(0, 95));
+        };
+
+        for (int i = 0; i < 20; i++) {
+            md.save(mezzoSupplier.get());
+        }
+
+        //Creazione oggetto DistributoreAutomatico
+        Supplier<DistributoreAutomatico> distributoreAutomaticoSupplier = () -> new DistributoreAutomatico(f.address().cityName(), r.nextBoolean());
+
+        for (int i = 0; i < 10; i++) {
+            ped.save(distributoreAutomaticoSupplier.get());
+        }
+
+        //Creazione oggetto NegozioRivenditore
+        Supplier<NegozioRivenditore> negozioRivenditoreSupplier = () -> new NegozioRivenditore(f.address().cityName(), f.lordOfTheRings().character(), f.company().name(), LocalTime.of(9, 9), LocalTime.of(18, 0));
+        for (int i = 0; i < 10; i++) {
+            ped.save(negozioRivenditoreSupplier.get());
+        }
+
+        //Creazione oggetto Biglietto
+        Supplier<Biglietto> bigliettoSupplier = () -> {
+
+            List<Mezzo> listaMezzo = md.findAllMezzo();
+            Mezzo mezzo = listaMezzo.get(r.nextInt(0, listaMezzo.size()));
+
+            List<PuntoEmissione> listaPuntiEmissione = ped.findAllPuntoEmissione();
+            PuntoEmissione punto = listaPuntiEmissione.get(r.nextInt(0, listaPuntiEmissione.size()));
+
+            boolean rdmBoolean = r.nextBoolean();
+
+            LocalDate dataAcquisto = getRandomDate(LocalDate.of(2024, 1, 1), LocalDate.of(2025, 1, 1));
+
+            if (rdmBoolean) {
+                return new Biglietto(dataAcquisto, punto, dataAcquisto.plusDays(r.nextLong(0, 5)), mezzo);
+            } else {
+                return new Biglietto(getRandomDate(LocalDate.of(2024, 1, 1), LocalDate.of(2025, 1, 1)), punto, mezzo);
+            }
+
+        };
+
+        for (int i = 0; i < 20; i++) {
+            gd.save(bigliettoSupplier.get());
+        }
+
+        //Creazione oggetto abbonamento
+        Supplier<Abbonamento> abbonamentoSupplier = () -> {
+
+            String[] tipoAbbonamento = {"MENSILE", "SETTIMANALE"};
+            TipoAbbonamento tipo = TipoAbbonamento.valueOf(tipoAbbonamento[r.nextInt(0, 2)]);
+
+            List<PuntoEmissione> listaPuntiEmissione = ped.findAllPuntoEmissione();
+            PuntoEmissione punto = listaPuntiEmissione.get(r.nextInt(0, listaPuntiEmissione.size()));
+
+            List<TesseraUtente> listaTesseraUtente = td.findAllTesseraUtente();
+            TesseraUtente tessera = listaTesseraUtente.get(r.nextInt(0, listaTesseraUtente.size()));
+
+            return new Abbonamento(tipo, getRandomDate(LocalDate.of(2024, 1, 1), LocalDate.now()), punto, tessera);
+        };
+
+        for (int i = 0; i < 20; i++) {
+            gd.save(abbonamentoSupplier.get());
+        }
+
+        //Creazione oggetto Tratta
+        Supplier<Tratta> trattaSupplier = () -> {
+            return new Tratta(r.nextInt(45, 120), f.lordOfTheRings().location(), f.lordOfTheRings().location());
+        };
+
+        for (int i = 0; i < 10; i++) {
+            trd.save(trattaSupplier.get());
+        }
+
+        //Creazione oggetto MezzaTratta
+        Supplier<MezzoTratta> mezzoTrattaSupplier = () -> {
+
+            int orarioPh = r.nextInt(1, 23);
+            int orarioPm = r.nextInt(1, 59);
+            LocalTime orarioP = LocalTime.of(orarioPh, orarioPm);
+
+            List<Tratta> listaTratta = trd.findAllTratte();
+            Tratta tratta = listaTratta.get(r.nextInt(0, listaTratta.size()));
+
+            List<Mezzo> listaMezzo = md.findAllMezzo();
+            Mezzo mezzo = listaMezzo.get(r.nextInt(0, listaMezzo.size()));
+
+            return new MezzoTratta(orarioP, orarioP.plusHours(4), tratta, mezzo);
+        };
+
+        for (int i = 0; i < 20; i++) {
+            mtd.save(mezzoTrattaSupplier.get());
+        }
+
+        //Creazione oggetto StatoMezzo
+        Supplier<StatoMezzo> statoMezzoSupplier = () -> {
+
+            List<Mezzo> listaMezzo = md.findAllMezzo();
+            Mezzo mezzo = listaMezzo.get(r.nextInt(0, listaMezzo.size()));
+
+            String[] tipoStato = {"IN_SERVIZIO", "IN_MANUTENZIONE"};
+            TipoStatoMezzo tipo = TipoStatoMezzo.valueOf(tipoStato[r.nextInt(0, 1)]);
+
+            boolean rdmBoolean = r.nextBoolean();
+            LocalDate dataInizio = getRandomDate(LocalDate.of(2024, 1, 1), LocalDate.now());
+
+            if (rdmBoolean) {
+                return new StatoMezzo(mezzo, tipo, dataInizio, dataInizio.plusYears(4));
+            } else {
+                return new StatoMezzo(mezzo, tipo, dataInizio, dataInizio.minusMonths(2), "Guasto al veicolo");
+            }
+
+        };
+
+        for (int i = 0; i < 20; i++) {
+            std.save(statoMezzoSupplier.get());
+        }
 
 
         System.out.println("Connessione al database riuscita!");
