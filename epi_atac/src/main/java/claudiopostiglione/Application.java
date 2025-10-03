@@ -9,11 +9,10 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Random;
-import java.util.Scanner;
-import java.util.UUID;
+import java.time.LocalTime;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Supplier;
 
 public class Application {
 
@@ -46,7 +45,7 @@ public class Application {
 //            uDao.save(utenteSupplier.get());
 //        }
 //
-//
+
 //        //Creazione oggetto tesseraUtente
 //        List<Long> longUsciti = new ArrayList<>();
 //        Supplier<TesseraUtente> tesseraUtenteSupplier = () -> {
@@ -77,7 +76,7 @@ public class Application {
 //            return new Mezzo(mezzo, r.nextInt(0, 95));
 //        };
 //
-//        for (int i = 0; i < 20; i++) {
+//        for (int i = 0; i < 30; i++) {
 //            md.save(mezzoSupplier.get());
 //        }
 //
@@ -93,7 +92,7 @@ public class Application {
 //        for (int i = 0; i < 10; i++) {
 //            ped.save(negozioRivenditoreSupplier.get());
 //        }
-//
+
 //        //Creazione oggetto Biglietto
 //        Supplier<Biglietto> bigliettoSupplier = () -> {
 //
@@ -134,10 +133,10 @@ public class Application {
 //            return new Abbonamento(tipo, getRandomDate(LocalDate.of(2024, 1, 1), LocalDate.now()), punto, tessera);
 //        };
 //
-//        for (int i = 0; i < 20; i++) {
+//        for (int i = 0; i < 50; i++) {
 //            gd.save(abbonamentoSupplier.get());
 //        }
-//
+
 //        //Creazione oggetto Tratta
 //        Supplier<Tratta> trattaSupplier = () -> {
 //            return new Tratta(r.nextInt(45, 120), f.lordOfTheRings().location(), f.lordOfTheRings().location());
@@ -147,7 +146,7 @@ public class Application {
 //            trd.save(trattaSupplier.get());
 //        }
 //
-//        //Creazione oggetto MezzaTratta
+        //Creazione oggetto MezzaTratta
 //        Supplier<MezzoTratta> mezzoTrattaSupplier = () -> {
 //
 //            int orarioPh = r.nextInt(1, 23);
@@ -167,7 +166,7 @@ public class Application {
 //            mtd.save(mezzoTrattaSupplier.get());
 //        }
 //
-//        //Creazione oggetto StatoMezzo
+        //Creazione oggetto StatoMezzo
 //        Supplier<StatoMezzo> statoMezzoSupplier = () -> {
 //
 //            List<Mezzo> listaMezzo = md.findAllMezzo();
@@ -187,10 +186,10 @@ public class Application {
 //
 //        };
 //
-//        for (int i = 0; i < 20; i++) {
+//        for (int i = 0; i < 70; i++) {
 //            std.save(statoMezzoSupplier.get());
 //        }
-
+//
 
         System.out.println("Connessione al database riuscita!");
 
@@ -221,41 +220,58 @@ public class Application {
 
         System.out.println("|- Login -|");
         System.out.println("| Salve, benvenuto ad EPI-ATAC, prego, identificarsi come utente o amministratore: |--(1 Utente) / (2 Amministratore) / ('q' EXIT) --| ");
-        String scelta = scanner.nextLine();
+        while(true) {
 
-        switch (scelta) {
+            try {
 
-            case "q":
-                break;
-            case "1":
-                //Sezione utente
-                System.out.println("Sei già registrato? |--(1 - SI) / (2 - NO)--|");
-                int secondScelta = Integer.parseInt(scanner.nextLine());
-                if (secondScelta == 1) {
-                    try {
-                        System.out.println("| Inserisci le credenziali: --( ID Utente )--");
-                        String ID = scanner.nextLine();
-                        Utente utenteFound = uDao.findUtenteById(Long.parseLong(ID));
-                        utenteRegistrato(utenteFound, em);
-                    } catch (IdNotFoundException er) {
-                        System.out.println(er.getMessage());
+            String scelta = scanner.nextLine();
+
+            switch (scelta) {
+
+                case "q":
+                    break;
+                case "1":
+                    //Sezione utente
+                    int secondaScelta;
+                    do {
+
+                    System.out.println("Sei già registrato? |--(1 - SI) / (2 - NO)--|");
+                     secondaScelta = Integer.parseInt(scanner.nextLine());
+                    if (secondaScelta == 1) {
+                        try {
+
+                            System.out.println("| Inserisci le credenziali: --( ID Utente )--");
+                            String ID = scanner.nextLine();
+                            Utente utenteFound = uDao.findUtenteById(Long.parseLong(ID));
+                            utenteRegistrato(utenteFound, em);
+                        } catch (IdNotFoundException er) {
+                            System.out.println(er.getMessage());
+                        }
+                        break;
+                    } else if (secondaScelta == 2 ){
+                        utenteNonRegistrato(em);
+                        break;
+                    }else{
+                        System.out.println("Scelta non disponibile");
+
                     }
+                    }while(secondaScelta != 1 || secondaScelta != 2);
+                    break;
+                case "2":
+                    //Sezione amministratore
+                    System.out.println("Inserisci il numero utente:");
+                    String ID = scanner.nextLine();
+                    Utente utenteFound = uDao.findUtenteById(Long.parseLong(ID));
+                    amministratore(utenteFound, em);
+                    break;
+                default:
 
-                } else {
-                    utenteNonRegistrato(em);
-                }
-                break;
-            case "2":
-                //Sezione amministratore
-                System.out.println("Inserisci il numero utente:");
-                String ID = scanner.nextLine();
-                Utente utenteFound = uDao.findUtenteById(Long.parseLong(ID));
-                amministratore(utenteFound, em);
-                break;
-            default:
-                System.out.println("Attenzione, scelta non disponibile, prego riprovare");
+                    System.out.println("Attenzione, scelta non disponibile, prego riprovare");
+            }
+            } catch (NumberFormatException e) {
+                System.out.println(e.getMessage());
+            }
         }
-
 
         // System.out.println(isTheSubValid("b9b39507-1522-4da7-87ff-13ed178ceb3a", "10b72c5d-3767-4210-8cde-913ed88f4012", em));
         //System.out.println(isTheSubValid("b9b39507-1522-4da7-87ff-13ed178ceb3a", "10b72c5d-3767-4210-8cde-913ed88f4012", em));
@@ -266,6 +282,12 @@ public class Application {
         //       tuDao.renewTessera(1);
 
         //peDao.findAllPuntoEmissione();
+
+
+
+
+
+
     }
 
     public static LocalDate getRandomDate(LocalDate start, LocalDate end) {
@@ -387,7 +409,7 @@ public class Application {
                         System.out.println("(✿◠‿◠)");
                         break;
                     default:
-                        System.out.println("Scelta non disponibile, prego riprovare");
+                        System.out.println("Scelta non disponibile  (╯°□°）╯︵ ┻━┻ .... prego riprovare (✿◠‿◠)");
                         break;
                 }
                 break;
@@ -413,7 +435,7 @@ public class Application {
             if (abbCercato.getDataScadenza().isAfter(LocalDate.now())) {
                 System.out.println("L'abbonamento è valido!");
             } else {
-                System.out.println("L'abbonamento non è valido");
+                System.out.println("L'abbonamento non è valido"+" "+ "(╯°□°）╯︵ ┻━┻");
             }
             return abbCercato.getDataScadenza().isAfter(LocalDate.now());
         } catch (Exception e) {
@@ -453,7 +475,7 @@ public class Application {
                 MezzoTratta mt = listaMezzoTratte.get(numTabellone);
                 Mezzo mezzo = mt.getMezzo();
                 if (numTabellone > listaMezzoTratte.size()) {
-                    System.out.println("Numero non valido, riprova");
+                    System.out.println("Numero non valido, riprova   (╯°□°）╯︵ ┻━┻");
                 } else {
                     gvDao.save(new Biglietto(LocalDate.now(), listaPE.get(r.nextInt(listaPE.size())), mezzo));
                     break;
@@ -466,12 +488,19 @@ public class Application {
     }
 
     public static void amministratore(Utente utente, EntityManager em) {
+        while(true){
+            try{
         System.out.println("| Ciao " + utente.getNome());
         System.out.println("| Queste sono le opzioni disponibili:");
         System.out.println("| 0 - EXIT (0) ");
         System.out.println("| 1 - Calcolare il tempo medio effettivo di percorrenza di un mezzo ");
         System.out.println("| 2 - Controllare il numero di biglietti/abbonamenti in un periodo");
         System.out.println("| 3 - Tenere traccia del numero di volte che un mezzo percorre una tratta e del tempo effettivo di percorrenza di esse ");
+    }catch (Exception e){
+                System.err.println(e.getMessage() + "Hai Sbagliato!  (╯°□°）╯︵ ┻━┻");
+            }
+        }
+
     }
 
 }
