@@ -36,8 +36,14 @@ MODELLO ER: (Tutte le relazioni hanno un id autogenerativo che indica )
 
 TECNOLOGIE UTILIZZATE:
 Per la creazione del progetto, sono stati implementati varie tecnologie:
+- Progetto creato con MAVEN (Catalog: Maven Central / Archetype:   com.dominikcebula.archetypes:java21-basic-archetype)
 - JPA (Java Persistence API)
 - POSTGRES (Per creazione del database)
 - PG-ADMIN 4 (interfaccia grafica per amministrare e gestire il database SQL) 
 - framework HIBERNATE
-  
+
+Collaboratori del progetto :
+- Thoma Galbignani
+- Cristina Mastellaro
+- Mattia Pastorini
+- Claudio Postiglione
