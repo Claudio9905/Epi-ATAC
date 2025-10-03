@@ -31,6 +31,10 @@ MODELLO ER: (Tutte le relazioni hanno un id autogenerativo che indica )
 - STATO_MEZZO(id, data_inizio, data_fine, motivo_manutenzione, tipo_stato, mezzo_id)
 - MEZZO_TRATTO(id, orario_arrivo, orario_partenza, percorrenza_effettiva, mezzo_id, tratta_id)
 - TRATTA(id, zona_partenza, capolinea, percorrenza_effettiva)
+---------------------------------------------------------------------------------------------
+
+ERM da PG-ADMIN
+<img width="1030" height="844" alt="Screenshot 2025-10-03 104456" src="https://github.com/user-attachments/assets/ba4280de-6086-4943-bc5f-5ec4295edf1e" />
 
 ---------------------------------------------------------------------------------------------
 
