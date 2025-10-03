@@ -2,8 +2,8 @@ package claudiopostiglione.entities;
 
 import jakarta.persistence.*;
 
+import java.time.Duration;
 import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 @Entity
@@ -33,12 +33,14 @@ public class MezzoTratta {
     public MezzoTratta() {
     }
 
+
     public MezzoTratta(LocalTime orarioPartenza, LocalTime orarioArrivo, Tratta tratta, Mezzo mezzo) {
         this.orarioPartenza = orarioPartenza;
         this.tratta = tratta;
         this.mezzo = mezzo;
         this.orarioArrivo = orarioArrivo;
-        this.percorrenzaEffettiva = ChronoUnit.MINUTES.between(orarioPartenza, orarioArrivo);
+//        this.percorrenzaEffettiva = ChronoUnit.MINUTES.between(orarioPartenza, orarioArrivo);
+        this.percorrenzaEffettiva = Duration.between(orarioPartenza, orarioArrivo).toMinutes();
     }
 
     //Metodi
@@ -52,10 +54,6 @@ public class MezzoTratta {
 
     public long getPercorrenzaEffettiva() {
         return percorrenzaEffettiva;
-    }
-
-    public void setPercorrenzaEffettiva(int percorrenzzaEffettiva) {
-        this.percorrenzaEffettiva = percorrenzzaEffettiva;
     }
 
     public void setPercorrenzaEffettiva(long percorrenzaEffettiva) {

@@ -9,10 +9,11 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.*;
+import java.util.List;
+import java.util.Random;
+import java.util.Scanner;
+import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.function.Supplier;
 
 public class Application {
 
@@ -21,7 +22,7 @@ public class Application {
     public static Scanner scanner = new Scanner(System.in);
     public static Random r = new Random();
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         EntityManager em = emf.createEntityManager();
         Faker f = new Faker();
 
@@ -191,7 +192,10 @@ public class Application {
         }
 
 
-        System.out.println("Connessione al database riuscita!");
+        System.out.println("Connessione in corso...");
+        Thread.sleep(4000);
+        System.out.println("Benvenuti su Epi-ATAC!");
+        Thread.sleep(2000);
 
         //-----------------------------------------------------------------------------------------------------------
 
@@ -217,29 +221,25 @@ public class Application {
 //        System.out.println("|");
         System.out.println("|");
         System.out.println("|--------------------------------");
-
-        System.out.println("|- Login -|");
-        System.out.println("| Salve, benvenuto ad EPI-ATAC, prego, identificarsi come utente o amministratore: |--(1 Utente) / (2 Amministratore) / ('q' EXIT) --| ");
+        System.out.println("|");
+        System.out.println("| Accesso alla sezione login in corso...");
+        Thread.sleep(4000);
         while (true) {
-
+            System.out.println("|- Login -|");
+            System.out.println("| Salve, benvenuto ad EPI-ATAC, prego, identificarsi come utente o amministratore: |--(1 Utente) / (2 Amministratore) / ('q' EXIT) --| ");
             try {
-
                 String scelta = scanner.nextLine();
-
                 switch (scelta) {
-
                     case "q":
                         break;
                     case "1":
                         //Sezione utente
                         int secondaScelta;
                         do {
-
                             System.out.println("Sei già registrato? |--(1 - SI) / (2 - NO)--|");
                             secondaScelta = Integer.parseInt(scanner.nextLine());
                             if (secondaScelta == 1) {
                                 try {
-
                                     System.out.println("| Inserisci le credenziali: --( ID Utente )--");
                                     String ID = scanner.nextLine();
                                     Utente utenteFound = uDao.findUtenteById(Long.parseLong(ID));
@@ -262,12 +262,16 @@ public class Application {
                         System.out.println("Inserisci il numero utente:");
                         String ID = scanner.nextLine();
                         Utente utenteFound = uDao.findUtenteById(Long.parseLong(ID));
-                        amministratore(utenteFound, em);
+                        if (utenteFound.isAmministratore()) amministratore(utenteFound, em);
+                        else {
+                            System.out.println("Il numero di tessera inserito non appartiene a un amministratore");
+                            System.out.println("(ノಠ益ಠ)ノ彡┻━┻");
+                        }
                         break;
                     default:
-
                         System.out.println("Attenzione, scelta non disponibile, prego riprovare");
                 }
+                if (scelta.equals("q")) break;
             } catch (NumberFormatException e) {
                 System.out.println(e.getMessage());
             }
@@ -431,7 +435,7 @@ public class Application {
             if (abbCercato.getDataScadenza().isAfter(LocalDate.now())) {
                 System.out.println("L'abbonamento è valido!");
             } else {
-                System.out.println("L'abbonamento non è valido" + " " + "(╯°□°）╯︵ ┻━┻");
+                System.out.println("L'abbonamento non è valido (╯°□°）╯︵ ┻━┻");
             }
             return abbCercato.getDataScadenza().isAfter(LocalDate.now());
         } catch (Exception e) {
@@ -485,53 +489,92 @@ public class Application {
 
     public static void amministratore(Utente utente, EntityManager em) {
         MezzoTrattaDAO mtDAO = new MezzoTrattaDAO(em);
-        while (true) {
+        GestioneVenditaDAO gvDao = new GestioneVenditaDAO(em);
+        int scelta = 5;
+        do {
             try {
                 System.out.println("| Ciao " + utente.getNome());
                 System.out.println("| Queste sono le opzioni disponibili:");
                 System.out.println("| 0 - EXIT (0) ");
-                System.out.println("| 1 - Calcolare il tempo medio effettivo di percorrenza di un mezzo ");
+                System.out.println("| 1 - Calcolare il tempo medio effettivo di percorrenza di una tratta");
                 System.out.println("| 2 - Controllare il numero di biglietti/abbonamenti in un periodo");
                 System.out.println("| 3 - Tenere traccia del numero di volte che un mezzo percorre una " +
                         "tratta e del tempo effettivo di percorrenza di esse ");
-                System.out.println("| 4 - Calcolo del tempo medio effettivo di percorrenza di una tratta da parte di un mezzo");
-                int scelta = Integer.parseInt(scanner.nextLine());
+                scelta = Integer.parseInt(scanner.nextLine());
 
                 switch (scelta) {
 
                     case 1:
-
+                        while (true) {
+                            System.out.println("Guardando dal tabellone, indica il numero di tratta che vuoi verificare");
+                            try {
+                                int scegliLaTuaTratta = Integer.parseInt(scanner.nextLine());
+                                List<MezzoTratta> listaMezzoTratte = mtDAO.findAllMezzoTratte();
+                                MezzoTratta mt = listaMezzoTratte.get(scegliLaTuaTratta);
+                                Tratta tratta = mt.getTratta();
+                                if (scegliLaTuaTratta > listaMezzoTratte.size()) {
+                                    System.out.println("Numero non valido, riprova   (╯°□°）╯︵ ┻━┻");
+                                } else {
+                                    mtDAO.tempoMedioPercorrenzaTratta(tratta);
+                                }
+                                break;
+                            } catch (Exception e) {
+                                System.err.println(e.getMessage() + "Hai Sbagliato!  (╯°□°）╯︵ ┻━┻");
+                            }
+                        }
                         break;
                     case 2:
-
+                        while (!false) {
+                            try {
+                                System.out.println("Scrivi la data di inizio");
+                                String scegli = scanner.nextLine();
+                                LocalDate ldPartenza = LocalDate.parse(scegli);
+                                System.out.println("Scrivi la data di fine");
+                                String scegliLaFine = scanner.nextLine();
+                                LocalDate ldFine = LocalDate.parse(scegliLaFine);
+                                gvDao.totalSoldTicketsInAPeriod(ldPartenza, ldFine);
+                                break;
+                            } catch (Exception e) {
+                                System.err.println(e.getMessage() + "Hai Sbagliato!  (╯°□°）╯︵ ┻━┻");
+                            }
+                        }
                         break;
                     case 3:
-                        //Sezione traccia tempo e percorso
-                        System.out.println("Inserisci l'ID del mezzo:");
-                        String bohId = scanner.nextLine();
-                        mtDAO.findAllTratteOfMezzo(bohId);
+                        while (true) {
+                            try {
+                                //Sezione traccia tempo e percorso
+                                System.out.println("Inserisci l'ID del mezzo:");
+                                String bohId = scanner.nextLine();
+                                System.out.println("Guardando dal tabellone, indica il numero di tratta che vuoi verificare");
+                                int numTabellone = Integer.parseInt(scanner.nextLine());
+                                List<MezzoTratta> listaMezzoTratte = mtDAO.findAllMezzoTratte();
+                                MezzoTratta mt = listaMezzoTratte.get(numTabellone);
+                                UUID trattaId = mt.getTratta().getTrattaId();
+                                if (numTabellone > listaMezzoTratte.size()) {
+                                    System.out.println("Numero non valido, riprova   (╯°□°）╯︵ ┻━┻");
+                                } else {
+                                    mtDAO.findAllTratteOfMezzo(bohId, trattaId);
+                                }
+                                break;
+                            } catch (Exception e) {
+                                System.err.println(e.getMessage() + "Hai Sbagliato!  (╯°□°）╯︵ ┻━┻");
+                            }
+                        }
                         break;
-//                    case 4:
-//                        //Sezione traccia tempo e percorso
-//                        System.out.println("Inserisci il numero utente:");
-//                        String ID = scanner.nextLine();
-//                        Utente utenteFound = uDao.findUtenteById(Long.parseLong(ID));
-//                        amministratore(utenteFound, em);
-//                        break;
                     case 0:
                         //ESCI
                         System.out.println("Grazie per aver usufruito dei nostri servizi e buon viaggio!");
                         System.out.println("(✿◠‿◠)");
                         break;
                     default:
-
                         System.out.println("Attenzione, scelta non disponibile, prego riprovare");
-                }
 
+                }
+                if (scelta == 0) break;
             } catch (Exception e) {
                 System.err.println(e.getMessage() + "Hai Sbagliato!  (╯°□°）╯︵ ┻━┻");
             }
-        }
+        } while (scelta != 0);
 
     }
 
